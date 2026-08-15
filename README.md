@@ -1,20 +1,34 @@
-# AutoHS
+# NeuroInsight-AutoHS
 
-**Automated Hippocampal Sclerosis Workflow** — a structured, machine-readable pipeline for T1-weighted MRI analysis: hippocampal segmentation, volumetric extraction, asymmetry indexing, and clinical review.
+**NeuroInsight-AutoHS** is a runnable application for automated hippocampal sclerosis (HS) analysis from T1-weighted MRI: hippocampal segmentation, volumetric extraction, asymmetry indexing, and clinical reporting.
 
-AutoHS is a **runnable two-step workflow** for hippocampal asymmetry analysis from T1-weighted MRI. It queues jobs and runs them when Docker and system resources are available.
+It implements the **[AutoHS pipeline](https://github.com/phindagijimana/AutoHS)** — a structured, machine-readable two-step workflow maintained in the [AutoHS repository](https://github.com/phindagijimana/AutoHS) on GitHub. The pipeline specification lives in `workflow/pipeline.yaml`; this repo provides the CLI, Docker runner, and AI-compute reporting container that execute that workflow.
+
+## AutoHS pipeline reference
+
+| Component | Location | Role |
+|-----------|----------|------|
+| **AutoHS pipeline** | [github.com/phindagijimana/AutoHS](https://github.com/phindagijimana/AutoHS) | Canonical workflow definition — steps, dependencies, progress ranges, validation |
+| **NeuroInsight-AutoHS** (this repo) | Same repository | Runnable implementation — job queue, Docker orchestration, reports |
+
+NeuroInsight-AutoHS runs the AutoHS pipeline as two Docker steps when resources are available:
+
+| Step | Name | Container | What it does |
+|------|------|-----------|--------------|
+| **1** | FreeSurfer processing | `freesurfer/freesurfer:7.4.1` | `recon-all` + `mri_segstats` → `aseg.stats` |
+| **2** | AI-compute | `autohs/ai-compute:latest` | Extract volumes, asymmetry index, overlays, PDF report |
 
 ## What this repo contains
 
 ```
-AutoHS/
+NeuroInsight-AutoHS/
 ├── AutoHS                  # CLI: install, build, submit, run, queue, logs
 ├── ai_compute/             # Step 2 container code (post-processing + reporting)
 ├── docker/
 │   └── Dockerfile.ai-compute
 ├── docker-compose.yml
-├── workflow/
-│   ├── pipeline.yaml       # 2-step runnable pipeline
+├── workflow/               # AutoHS pipeline specification
+│   ├── pipeline.yaml       # Master 2-step pipeline definition
 │   ├── runner.py           # Orchestrates FreeSurfer → AI-compute
 │   ├── queue.py            # SQLite job queue
 │   └── steps/
@@ -22,13 +36,6 @@ AutoHS/
 │       └── 02-ai-compute.yaml
 └── data/jobs/              # Job workspaces (created at runtime)
 ```
-
-## Runnable workflow (2 steps)
-
-| Step | Name | Container | What it does |
-|------|------|-----------|--------------|
-| **1** | FreeSurfer processing | `freesurfer/freesurfer:7.4.1` | `recon-all` + `mri_segstats` → `aseg.stats` |
-| **2** | AI-compute | `autohs/ai-compute:latest` | Extract volumes, asymmetry index, overlays, PDF report |
 
 Jobs stay **pending** until `./AutoHS run` and resources are ready (Docker, disk, RAM, images, queue slot).
 
@@ -48,10 +55,10 @@ chmod +x ./AutoHS
 
 | Command | Description |
 |---------|-------------|
-| `install` | Create `venv/`, install dependencies, validate pipeline |
+| `install` | Create `venv/`, install dependencies, validate AutoHS pipeline |
 | `build` | Build `autohs/ai-compute:latest` from `docker/Dockerfile.ai-compute` |
 | `submit` | Queue a T1 NIfTI scan for processing |
-| `run` | Execute step 1 then step 2 for oldest pending job when resources allow |
+| `run` | Execute AutoHS pipeline steps 1–2 for oldest pending job when resources allow |
 | `queue` | Show job queue and resource readiness |
 | `start` | Validate pipeline + run unit tests |
 | `logs` | Tail `logs/autohs.log` |
@@ -73,7 +80,7 @@ Outputs per job: `data/jobs/{job_id}/output/report.json`, `report.pdf`, `summary
 
 ## Hippocampal asymmetry index
 
-AutoHS implements the MRI-derived hippocampal asymmetry index used to identify hippocampal sclerosis in epilepsy surgical specimens (see [Citation](#citation) below).
+NeuroInsight-AutoHS implements the MRI-derived hippocampal asymmetry index used to identify hippocampal sclerosis in epilepsy surgical specimens (see [Citation](#citation) below).
 
 FreeSurfer subcortical segmentation yields left and right hippocampal volumes (**L**, **R**) in mm³. The asymmetry index (**AI**) is:
 
@@ -87,7 +94,7 @@ AI = (L − R) / (L + R)
 | **R** | Right hippocampal volume (mm³) |
 | **AI** | Asymmetry index (dimensionless; typically −1 to +1) |
 
-**Volume laterality** (threshold ±0.05, same as the NeuroInsight dashboard):
+**Volume laterality** (threshold ±0.05):
 
 | Condition | Interpretation |
 |-----------|----------------|
@@ -103,11 +110,11 @@ AI = (L − R) / (L + R)
 | **AI < −0.070839747728063** | Right-dominant (Left HS suspected) |
 | Otherwise | Balanced (No HS) |
 
-These rules are applied in **AI-compute (step 2)** and written to `report.json`, `summary.txt`, and `report.pdf`.
+These rules are applied in **AI-compute (AutoHS step 2)** and written to `report.json`, `summary.txt`, and `report.pdf`.
 
 ## Citation
 
-If you use this workflow or the asymmetry index in research, please cite:
+If you use NeuroInsight-AutoHS, the AutoHS pipeline, or the asymmetry index in research, please cite:
 
 > **Ndagijimana P**, **Brennan D**, **Shinohara R**, **Gugger J**. MRI derived hippocampal asymmetry identifies hippocampal sclerosis in epilepsy surgical specimens. *Brain Communications*. **Accepted (in press)**.
 
@@ -120,6 +127,17 @@ If you use this workflow or the asymmetry index in research, please cite:
   journal = {Brain Communications},
   year    = {2026},
   note    = {Accepted (in press)}
+}
+```
+
+**AutoHS pipeline reference:**
+
+```bibtex
+@software{autohs2026,
+  title  = {AutoHS: Automated Hippocampal Sclerosis Workflow},
+  author = {Ndagijimana, Philbert},
+  year   = {2026},
+  url    = {https://github.com/phindagijimana/AutoHS}
 }
 ```
 
@@ -145,18 +163,10 @@ python -m unittest workflow.tests.test_workflow -v
 
 ## Documentation
 
-- **[workflow/README.md](workflow/README.md)** — full pipeline reference, progress ranges, FreeSurfer sub-steps, Python loader API
-- **[workflow/pipeline.yaml](workflow/pipeline.yaml)** — master definition with execution order and job state machine
+- **[workflow/README.md](workflow/README.md)** — AutoHS pipeline reference, progress ranges, FreeSurfer sub-steps
+- **[workflow/pipeline.yaml](workflow/pipeline.yaml)** — master pipeline definition with execution order and job state machine
 - **[workflow/diagrams/](workflow/diagrams/)** — Mermaid flowcharts
-
-## Relationship to NeuroInsight
-
-| Repo | Role |
-|------|------|
-| **AutoHS** (this repo) | Workflow specification — steps, dependencies, progress, code references |
-| **[neuroinsight_local](https://github.com/phindagijimana/neuroinsight_local)** | Runnable application — API, UI, FreeSurfer processing, deployment |
-
-Step files include `code_reference` fields pointing to NeuroInsight source modules. When AutoHS is cloned alone, file-existence checks are skipped; clone both repos side-by-side for strict validation.
+- **[AutoHS on GitHub](https://github.com/phindagijimana/AutoHS)** — canonical AutoHS pipeline repository
 
 ## Requirements
 
@@ -167,10 +177,8 @@ Step files include `code_reference` fields pointing to NeuroInsight source modul
 
 No Redis or PostgreSQL required — jobs are tracked in SQLite at `data/autohs.db`.
 
-Implementation reference: [NeuroInsight](https://github.com/phindagijimana/neuroinsight_local) (full web application).
-
 ## License
 
-Workflow definitions: MIT (see NeuroInsight project for application licensing and FreeSurfer terms).
+Workflow definitions: MIT. See project licensing and FreeSurfer terms for processing components.
 
 © 2025 University of Rochester. All rights reserved.

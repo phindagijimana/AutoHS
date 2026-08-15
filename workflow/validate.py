@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Validate NeuroInsight workflow pipeline definitions.
+Validate the AutoHS pipeline for NeuroInsight-AutoHS.
 
 Run from repository root:
     python -m workflow.validate
@@ -34,7 +34,7 @@ def main() -> int:
     freesurfer_count = len(pipeline.freesurfer_substeps)
     execution_order = loader.get_execution_order()
 
-    print("AutoHS workflow validation")
+    print("NeuroInsight-AutoHS — AutoHS pipeline validation")
     print(f"  Pipeline: {pipeline.data.get('name')} v{pipeline.data.get('version')}")
     print(f"  Top-level steps: {step_count}")
     print(f"  FreeSurfer substeps: {freesurfer_count}")

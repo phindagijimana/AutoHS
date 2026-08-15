@@ -68,7 +68,7 @@ def run(job_id: str, input_file: Path, freesurfer_dir: Path, output_dir: Path, s
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="AutoHS AI-compute (step 2)")
+    parser = argparse.ArgumentParser(description="NeuroInsight-AutoHS AI-compute (AutoHS pipeline step 2)")
     parser.add_argument("--job-id", required=True)
     parser.add_argument("--input", required=True, type=Path)
     parser.add_argument("--freesurfer", required=True, type=Path)

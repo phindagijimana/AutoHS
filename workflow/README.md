@@ -1,11 +1,13 @@
-# AutoHS — Runnable Workflow
+# AutoHS pipeline — NeuroInsight-AutoHS
 
-Two-step hippocampal asymmetry pipeline:
+This directory defines the **[AutoHS pipeline](https://github.com/phindagijimana/AutoHS)** executed by **NeuroInsight-AutoHS** — a two-step hippocampal asymmetry workflow for T1-weighted MRI.
 
 | Step | ID | Container |
 |------|-----|-----------|
 | 1 | `freesurfer-processing` | `freesurfer/freesurfer:7.4.1` |
 | 2 | `ai-compute` | `autohs/ai-compute:latest` |
+
+**Pipeline reference:** [github.com/phindagijimana/AutoHS](https://github.com/phindagijimana/AutoHS)
 
 ## Run locally
 
@@ -18,7 +20,7 @@ Two-step hippocampal asymmetry pipeline:
 
 ## Step 2 — AI-compute container
 
-Post-processing and reporting:
+Post-processing and reporting for the AutoHS pipeline:
 
 - Parse `aseg.stats` hippocampal volumes
 - Compute asymmetry index: `AI = (L − R) / (L + R)`

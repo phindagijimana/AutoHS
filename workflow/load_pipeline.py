@@ -1,5 +1,5 @@
 """
-Load and validate the NeuroInsight workflow pipeline definitions.
+Load and validate the AutoHS pipeline for NeuroInsight-AutoHS.
 
 Usage:
     from workflow.load_pipeline import PipelineLoader
@@ -75,7 +75,7 @@ class PipelineLoader:
         self.workflow_dir = workflow_dir or Path(__file__).resolve().parent
         self.repo_root = self.workflow_dir.parent
         self._pipeline: PipelineDefinition | None = None
-        # Auto-detect standalone repo: code refs point to external NeuroInsight app
+        # Auto-detect standalone clone: code refs may point to external app modules
         if validate_code_refs is None:
             self.validate_code_refs = (self.repo_root / "backend").exists()
         else:

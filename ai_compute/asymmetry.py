@@ -6,7 +6,7 @@ RIGHT_HS_THRESHOLD = 0.046915816971433
 
 
 def threshold_guide() -> str:
-    """Interpretation rules matching the NeuroInsight dashboard."""
+    """Interpretation rules for NeuroInsight-AutoHS (AutoHS pipeline step 2)."""
     return (
         f"Volume laterality (threshold ±{LATERALITY_THRESHOLD}):\n"
         f"• Left > Right if AI > {LATERALITY_THRESHOLD}\n"
