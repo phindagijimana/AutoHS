@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# NeuroInsight-AutoHS — Workflow CLI
+# AutoHS — Workflow CLI
 # Manage installation, validation, and execution of the AutoHS pipeline.
 
 set -euo pipefail
@@ -45,7 +45,7 @@ append_log() {
 
 usage() {
   cat <<EOF
-NeuroInsight-AutoHS — AutoHS pipeline CLI
+AutoHS — Automated Hippocampal Sclerosis Workflow CLI
 
 Usage:
   ./AutoHS install          Install Python deps and validate pipeline
@@ -257,7 +257,7 @@ cmd_stop() {
 
 cmd_status() {
   PY="$(python_bin)"
-  echo "NeuroInsight-AutoHS status"
+  echo "AutoHS status"
   echo "  Root:       $ROOT"
   echo "  Python:     $PY"
   echo "  Venv:       $([ -d "$VENV" ] && echo "installed" || echo "not installed")"

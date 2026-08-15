@@ -1,7 +1,7 @@
 Citation
 ========
 
-If you use NeuroInsight-AutoHS, the AutoHS pipeline, or the hippocampal asymmetry index in research, please cite:
+If you use AutoHS or the hippocampal asymmetry index in research, please cite:
 
    **Ndagijimana P**, **Brennan D**, **Shinohara R**, **Gugger J**. MRI derived
    hippocampal asymmetry identifies hippocampal sclerosis in epilepsy surgical
@@ -35,6 +35,6 @@ AutoHS pipeline reference
 Related software
 ----------------
 
-* `AutoHS on GitHub <https://github.com/phindagijimana/AutoHS>`_ — canonical AutoHS
-  pipeline specification and NeuroInsight-AutoHS implementation
+* `NeuroInsight-AutoHS <https://github.com/phindagijimana/neuroinsight_local>`_ — full web
+  application that implements the AutoHS pipeline
 * `QSIPrep <https://qsiprep.readthedocs.io/>`_ — BIDS App reference for documentation layout

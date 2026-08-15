@@ -1,5 +1,5 @@
 """
-Load and validate the AutoHS pipeline for NeuroInsight-AutoHS.
+Load and validate the AutoHS workflow pipeline definitions.
 
 Usage:
     from workflow.load_pipeline import PipelineLoader

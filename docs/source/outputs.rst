@@ -64,7 +64,7 @@ Metrics follow the Brain Communications (in press) thresholds:
 | otherwise                     | Balanced (No HS)                  |
 +-------------------------------+-----------------------------------+
 
-Volume laterality uses ±0.05 (NeuroInsight-AutoHS / AutoHS pipeline defaults).
+Volume laterality uses ±0.05 (AutoHS defaults).
 
 Provenance
 ----------

@@ -1,10 +1,9 @@
-# AutoHS pipeline — implemented by NeuroInsight-AutoHS
-# Reference: https://github.com/phindagijimana/AutoHS
+# AutoHS runnable workflow — two steps
 
 name: autohs
 version: "2.0.0"
 description: >
-  AutoHS two-step hippocampal asymmetry pipeline (NeuroInsight-AutoHS).
+  Runnable two-step hippocampal asymmetry workflow.
   Step 1: FreeSurfer processing (container).
   Step 2: AI-compute post-processing + reporting (container).
 

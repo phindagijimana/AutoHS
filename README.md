@@ -1,24 +1,17 @@
-# NeuroInsight-AutoHS
+# AutoHS
 
 [![CI](https://github.com/phindagijimana/AutoHS/actions/workflows/ci.yml/badge.svg)](https://github.com/phindagijimana/AutoHS/actions/workflows/ci.yml)
 [![Documentation](https://readthedocs.org/projects/autohs/badge/?version=latest)](https://autohs.readthedocs.io/en/latest/?badge=latest)
 
-**NeuroInsight-AutoHS** is a runnable application for automated hippocampal sclerosis (HS) analysis from T1-weighted MRI: hippocampal segmentation, volumetric extraction, asymmetry indexing, and clinical reporting. It is also packaged as a [BIDS App](https://bids.neuroimaging.io/bids_apps.html) (**AutoHS**).
+**Automated Hippocampal Sclerosis Workflow** — a BIDS App and runnable pipeline for T1-weighted MRI: hippocampal segmentation, volumetric extraction, asymmetry indexing, and clinical review.
 
 📖 **Documentation:** [autohs.readthedocs.io](https://autohs.readthedocs.io)
 
 🐳 **Docker:** `docker pull autohs/autohs:latest` (after release; see [Maintainers](docs/source/maintainers.rst))
 
-It implements the **[AutoHS pipeline](https://github.com/phindagijimana/AutoHS)** — a structured, machine-readable two-step workflow maintained in the [AutoHS repository](https://github.com/phindagijimana/AutoHS) on GitHub. The pipeline specification lives in `workflow/pipeline.yaml`; this repo provides the CLI, Docker runner, and AI-compute reporting container that execute that workflow.
+AutoHS is a **runnable two-step workflow** for hippocampal asymmetry analysis. It queues jobs and runs them when Docker and system resources are available.
 
-## AutoHS pipeline reference
-
-| Component | Location | Role |
-|-----------|----------|------|
-| **AutoHS pipeline** | [github.com/phindagijimana/AutoHS](https://github.com/phindagijimana/AutoHS) | Canonical workflow definition — steps, dependencies, progress ranges, validation |
-| **NeuroInsight-AutoHS** (this repo) | Same repository | Runnable implementation — job queue, Docker orchestration, reports |
-
-NeuroInsight-AutoHS runs the AutoHS pipeline as two Docker steps when resources are available:
+## Runnable workflow (2 steps)
 
 | Step | Name | Container | What it does |
 |------|------|-----------|--------------|
@@ -27,7 +20,7 @@ NeuroInsight-AutoHS runs the AutoHS pipeline as two Docker steps when resources 
 
 ## BIDS App
 
-NeuroInsight-AutoHS follows the [BIDS Apps](https://bids.neuroimaging.io/bids_apps.html) specification as **AutoHS**.
+AutoHS follows the [BIDS Apps](https://bids.neuroimaging.io/bids_apps.html) specification.
 
 ```bash
 # Install BIDS dependencies
@@ -49,19 +42,19 @@ Outputs: `output/autohs/sub-*/` with `report.json`, `report.pdf`, `summary.txt`.
 
 Full documentation: [docs/source/index.rst](docs/source/index.rst) (Sphinx / Read the Docs layout, QSIPrep-style).
 
-See also the legacy `./AutoHS` CLI for single-file job queue workflows.
+See also the `./AutoHS` CLI for single-file job queue workflows.
 
 ## What this repo contains
 
 ```
-NeuroInsight-AutoHS/
+AutoHS/
 ├── AutoHS                  # CLI: install, build, submit, run, queue, logs
 ├── ai_compute/             # Step 2 container code (post-processing + reporting)
 ├── docker/
 │   └── Dockerfile.ai-compute
 ├── docker-compose.yml
-├── workflow/               # AutoHS pipeline specification
-│   ├── pipeline.yaml       # Master 2-step pipeline definition
+├── workflow/
+│   ├── pipeline.yaml       # 2-step pipeline definition
 │   ├── runner.py           # Orchestrates FreeSurfer → AI-compute
 │   ├── queue.py            # SQLite job queue
 │   └── steps/
@@ -88,10 +81,10 @@ chmod +x ./AutoHS
 
 | Command | Description |
 |---------|-------------|
-| `install` | Create `venv/`, install dependencies, validate AutoHS pipeline |
+| `install` | Create `venv/`, install dependencies, validate pipeline |
 | `build` | Build `autohs/ai-compute:latest` from `docker/Dockerfile.ai-compute` |
 | `submit` | Queue a T1 NIfTI scan for processing |
-| `run` | Execute AutoHS pipeline steps 1–2 for oldest pending job when resources allow |
+| `run` | Execute step 1 then step 2 for oldest pending job when resources allow |
 | `queue` | Show job queue and resource readiness |
 | `start` | Validate pipeline + run unit tests |
 | `logs` | Tail `logs/autohs.log` |
@@ -113,7 +106,7 @@ Outputs per job: `data/jobs/{job_id}/output/report.json`, `report.pdf`, `summary
 
 ## Hippocampal asymmetry index
 
-NeuroInsight-AutoHS implements the MRI-derived hippocampal asymmetry index used to identify hippocampal sclerosis in epilepsy surgical specimens (see [Citation](#citation) below).
+AutoHS implements the MRI-derived hippocampal asymmetry index used to identify hippocampal sclerosis in epilepsy surgical specimens (see [Citation](#citation) below).
 
 FreeSurfer subcortical segmentation yields left and right hippocampal volumes (**L**, **R**) in mm³. The asymmetry index (**AI**) is:
 
@@ -143,11 +136,11 @@ AI = (L − R) / (L + R)
 | **AI < −0.070839747728063** | Right-dominant (Left HS suspected) |
 | Otherwise | Balanced (No HS) |
 
-These rules are applied in **AI-compute (AutoHS step 2)** and written to `report.json`, `summary.txt`, and `report.pdf`.
+These rules are applied in **AI-compute (step 2)** and written to `report.json`, `summary.txt`, and `report.pdf`.
 
 ## Citation
 
-If you use NeuroInsight-AutoHS, the AutoHS pipeline, or the asymmetry index in research, please cite:
+If you use AutoHS or the asymmetry index in research, please cite:
 
 > **Ndagijimana P**, **Brennan D**, **Shinohara R**, **Gugger J**. MRI derived hippocampal asymmetry identifies hippocampal sclerosis in epilepsy surgical specimens. *Brain Communications*. **Accepted (in press)**.
 
@@ -163,7 +156,7 @@ If you use NeuroInsight-AutoHS, the AutoHS pipeline, or the asymmetry index in r
 }
 ```
 
-**AutoHS pipeline reference:**
+**AutoHS software reference:**
 
 ```bibtex
 @software{autohs2026,
@@ -196,11 +189,17 @@ python -m unittest workflow.tests.test_workflow -v
 
 ## Documentation
 
-- **[autohs.readthedocs.io](https://autohs.readthedocs.io)** — NeuroInsight-AutoHS / AutoHS BIDS App documentation
-- **[workflow/README.md](workflow/README.md)** — AutoHS pipeline reference, progress ranges, FreeSurfer sub-steps
-- **[workflow/pipeline.yaml](workflow/pipeline.yaml)** — master pipeline definition with execution order and job state machine
+- **[autohs.readthedocs.io](https://autohs.readthedocs.io)** — AutoHS BIDS App documentation
+- **[workflow/README.md](workflow/README.md)** — pipeline reference, progress ranges, FreeSurfer sub-steps
+- **[workflow/pipeline.yaml](workflow/pipeline.yaml)** — master definition with execution order and job state machine
 - **[workflow/diagrams/](workflow/diagrams/)** — Mermaid flowcharts
-- **[AutoHS on GitHub](https://github.com/phindagijimana/AutoHS)** — canonical AutoHS pipeline repository
+
+## Related software
+
+| Project | Repository | Role |
+|---------|------------|------|
+| **AutoHS** (this repo) | [AutoHS](https://github.com/phindagijimana/AutoHS) | Pipeline spec, CLI, BIDS App, Docker runner |
+| **NeuroInsight-AutoHS** | [neuroinsight_local](https://github.com/phindagijimana/neuroinsight_local) | Full web application that implements the AutoHS pipeline |
 
 ## Requirements
 

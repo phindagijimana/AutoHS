@@ -35,7 +35,7 @@ def write_pdf_report(output_dir: Path, job_id: str, metrics: dict[str, Any], met
     styles = getSampleStyleSheet()
     story = []
 
-    story.append(Paragraph("NeuroInsight-AutoHS — Hippocampal Asymmetry Report", styles["Title"]))
+    story.append(Paragraph("AutoHS — Hippocampal Asymmetry Report", styles["Title"]))
     story.append(Spacer(1, 0.2 * inch))
     story.append(Paragraph(f"Job ID: {job_id}", styles["Normal"]))
     story.append(Paragraph(f"Input: {meta.get('input_file', 'N/A')}", styles["Normal"]))
@@ -91,7 +91,7 @@ def write_pdf_report(output_dir: Path, job_id: str, metrics: dict[str, Any], met
 def write_text_summary(output_dir: Path, job_id: str, metrics: dict[str, Any]) -> Path:
     path = output_dir / "summary.txt"
     lines = [
-        f"NeuroInsight-AutoHS job {job_id}",
+        f"AutoHS job {job_id}",
         f"Left hippocampus:  {metrics['left_hippocampus_mm3']} mm³",
         f"Right hippocampus: {metrics['right_hippocampus_mm3']} mm³",
         f"Asymmetry index:   {metrics['asymmetry_index']}",
