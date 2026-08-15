@@ -61,6 +61,20 @@ class AIComputeTests(unittest.TestCase):
 
         self.assertEqual(calculate_asymmetry_index(1000, 900), round(100 / 1900, 4))
 
+    def test_laterality_thresholds(self) -> None:
+        from ai_compute.asymmetry import classify_laterality
+
+        self.assertEqual(classify_laterality(0.06), "Left > Right")
+        self.assertEqual(classify_laterality(-0.06), "Right > Left")
+        self.assertEqual(classify_laterality(0.02), "Symmetric")
+
+    def test_hs_thresholds(self) -> None:
+        from ai_compute.asymmetry import classify_hs_laterality
+
+        self.assertIn("Right HS suspected", classify_hs_laterality(0.05))
+        self.assertIn("Left HS suspected", classify_hs_laterality(-0.08))
+        self.assertIn("Balanced", classify_hs_laterality(0.0))
+
     def test_parse_aseg_stats(self) -> None:
         from ai_compute.extract import parse_aseg_stats
         import tempfile

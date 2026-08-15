@@ -22,7 +22,8 @@ Post-processing and reporting:
 
 - Parse `aseg.stats` hippocampal volumes
 - Compute asymmetry index: `AI = (L − R) / (L + R)`
-- HS classification (Ndagijimana et al., Brain Communications, in press)
+- Volume laterality: Left > Right if AI > 0.05; Right > Left if AI < −0.05; symmetric between
+- HS classification: Right HS if AI > 0.046915816971433; Left HS if AI < −0.070839747728063
 - Optional coronal overlays
 - `report.json`, `report.pdf`, `summary.txt`
 

@@ -87,13 +87,23 @@ AI = (L − R) / (L + R)
 | **R** | Right hippocampal volume (mm³) |
 | **AI** | Asymmetry index (dimensionless; typically −1 to +1) |
 
-**Interpretation:**
+**Volume laterality** (threshold ±0.05, same as the NeuroInsight dashboard):
 
-- **AI > 0** — left hippocampus larger than right  
-- **AI < 0** — right hippocampus larger than left  
-- **AI ≈ 0** — symmetric volumes  
+| Condition | Interpretation |
+|-----------|----------------|
+| **AI > 0.05** | Left hippocampus larger than right |
+| **AI < −0.05** | Right hippocampus larger than left |
+| **−0.05 ≤ AI ≤ 0.05** | Symmetric volumes |
 
-This metric is computed in **AI-compute (step 2)** and is central to the AutoHS screening workflow described in the associated publication.
+**Hippocampal sclerosis (HS) classification** (publication thresholds):
+
+| Condition | Interpretation |
+|-----------|----------------|
+| **AI > 0.046915816971433** | Left-dominant (Right HS suspected) |
+| **AI < −0.070839747728063** | Right-dominant (Left HS suspected) |
+| Otherwise | Balanced (No HS) |
+
+These rules are applied in **AI-compute (step 2)** and written to `report.json`, `summary.txt`, and `report.pdf`.
 
 ## Citation
 
