@@ -20,17 +20,17 @@ Stage 2 — BIDS derivatives compliance
 * JSON sidecars with pipeline provenance
 * ``Sources`` / ``SpatialReference`` metadata where applicable
 
-Stage 3 — Feature completeness (current)
-------------------------------------------
+Stage 3 — Feature completeness
+------------------------------
 
 * ``--bids-filter-file`` (PyBIDS filters JSON for T1w selection)
 * ``--reports-only`` (re-run AI-compute from existing segmentation in ``-w``)
 
-Stage 4 — Integration testing
--------------------------------
+Stage 4 — Integration testing (current)
+---------------------------------------
 
-* CI job on a minimal public BIDS dataset
-* End-to-end smoke test (FastSurfer + report generation)
+* CI job on a minimal BIDS fixture dataset (``workflow/tests/fixtures/``)
+* End-to-end smoke test with mocked FastSurfer/FreeSurfer segmentation
 
 Stage 5 — Ecosystem
 -------------------

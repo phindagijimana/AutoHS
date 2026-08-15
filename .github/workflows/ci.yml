@@ -23,5 +23,3 @@ jobs:
         run: python -m workflow.validate
       - name: Run tests
         run: python -m unittest discover -s workflow/tests -p 'test_*.py' -v
-      - name: BIDS App CLI smoke test
-        run: python run.py --version

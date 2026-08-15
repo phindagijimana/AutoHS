@@ -1,0 +1,5 @@
+{
+  "Name": "AutoHS minimal BIDS fixture",
+  "BIDSVersion": "1.9.0",
+  "DatasetType": "raw"
+}

@@ -82,25 +82,33 @@ def discover_t1w_scans(
         for subject in subjects:
             sessions = session_labels or layout.get_sessions(subject=subject) or [None]
             for session in sessions:
+                query = dict(t1w_filters)
+                if "session" in query:
+                    filter_session = query["session"]
+                    if session is not None and filter_session != session:
+                        continue
+                else:
+                    query["session"] = session
                 files = layout.get(
                     subject=subject,
-                    session=session,
                     suffix="T1w",
                     extension=[".nii", ".nii.gz"],
                     return_type="file",
                     regex_search=regex_search,
-                    **t1w_filters,
+                    **query,
                 )
                 for path in files:
+                    resolved_session = session
+                    if resolved_session is None and "session" in query:
+                        resolved_session = query["session"]
                     scans.append(
                         T1wScan(
                             subject_label=subject,
-                            session_label=session,
+                            session_label=resolved_session,
                             t1w_path=Path(path),
                         )
                     )
-        if scans:
-            return scans
+        return scans
 
     for subject_dir in sorted(bids_dir.glob("sub-*")):
         subject = subject_dir.name.replace("sub-", "", 1)
