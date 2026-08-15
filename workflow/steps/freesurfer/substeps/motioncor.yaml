@@ -1,0 +1,16 @@
+id: motioncor
+name: Motion Correction
+macro: autorecon1
+log_marker: "#@# MotionCor"
+
+description: Correct head motion in the T1 volume before registration.
+
+weight: 1
+estimated_minutes: 0.3
+
+outputs:
+  - motion-corrected volume
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5068-5070"

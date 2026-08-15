@@ -1,0 +1,13 @@
+id: intensity-normalization
+name: Intensity Normalization
+macro: autorecon1
+log_marker: "#@# Intensity Normalization"
+
+description: Normalize voxel intensities across the brain volume.
+
+weight: 2
+estimated_minutes: 1.6
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5073-5074"

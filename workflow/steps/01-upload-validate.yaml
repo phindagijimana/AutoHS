@@ -1,0 +1,35 @@
+id: upload-validate
+name: Upload & Validate
+phase: intake
+order: 1
+
+description: >
+  Accept T1-weighted NIfTI upload from the web UI. Validate file extension
+  and optionally check filename for T1 indicators.
+
+actor: backend
+module: backend/api/upload_simple.py
+function: upload_file
+
+inputs:
+  - name: file
+    type: UploadFile
+    required: true
+    constraints:
+      extensions: [".nii", ".nii.gz"]
+  - name: patient_data
+    type: JSON string (Form)
+    required: false
+    fields: [patient_name, patient_id, age, sex, scanner, sequence, notes]
+
+outputs:
+  - Validated file bytes in memory
+  - Parsed patient metadata
+
+on_failure:
+  http_status: 400
+  actions: [reject upload, no job created]
+
+code_reference:
+  file: backend/api/upload_simple.py
+  lines: "57-83"

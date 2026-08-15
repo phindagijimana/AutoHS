@@ -1,0 +1,32 @@
+id: calculate-asymmetry
+name: Calculate Asymmetry Indices
+phase: processing
+order: 10
+
+description: >
+  Compute hippocampal asymmetry index: AI = (L - R) / (L + R).
+  Classify laterality and HS-related metrics.
+
+actor: worker
+module: pipeline/utils/asymmetry.py
+function: calculate_asymmetry_index, classify_laterality
+
+depends_on: [extract-volumes]
+
+formula: "AI = (left_volume - right_volume) / (left_volume + right_volume)"
+
+interpretation:
+  positive: Left hippocampus larger
+  negative: Right hippocampus larger
+  near_zero: Symmetric
+
+outputs:
+  - metrics list (stored via _save_results and later MetricService)
+
+progress: 95
+current_step: "Calculating asymmetry indices..."
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "1218-1222"
+  utility: pipeline/utils/asymmetry.py

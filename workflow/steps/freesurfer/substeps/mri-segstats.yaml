@@ -1,0 +1,18 @@
+id: mri-segstats
+name: MRI Segstats
+macro: post-processing
+depends_on: [fill]
+
+description: >
+  Run mri_segstats on aseg.auto.mgz to produce aseg.stats with hippocampal
+  volumes used by step 09 (extract-volumes).
+
+function: mri_segstats
+
+outputs:
+  - stats/aseg.stats
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  function: _run_freesurfer_primary
+  lines: "2935-2952"

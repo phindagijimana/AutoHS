@@ -1,0 +1,20 @@
+flowchart TB
+    subgraph autorecon1["autorecon1"]
+        M1[motioncor] --> M2[talairach] --> M3[nu intensity correction]
+        M3 --> M4[intensity normalization] --> M5[skull stripping]
+    end
+
+    subgraph autorecon2["autorecon2-volonly"]
+        M6[em registration] --> M7[ca normalize] --> M8[ca reg]
+        M8 --> M9[subcort seg] --> M10[cc seg] --> M11[merge aseg]
+        M11 --> M12[intensity norm 2] --> M13[wm segmentation] --> M14[fill]
+    end
+
+    subgraph post["post-processing"]
+        M15[mri_segstats]
+    end
+
+    autorecon1 --> autorecon2 --> post
+
+    style M8 fill:#ffe0e0,stroke:#c00
+    style M9 fill:#fff4e0,stroke:#c90

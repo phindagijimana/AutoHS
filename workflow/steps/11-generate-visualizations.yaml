@@ -1,0 +1,33 @@
+id: generate-visualizations
+name: Generate Visualizations
+phase: processing
+order: 11
+
+description: >
+  Create coronal and axial slice PNG overlays combining anatomical NIfTI with
+  segmentation masks for the interactive viewer and PDF reports.
+
+actor: worker
+module: pipeline/utils/visualization.py
+function: MRIProcessor._generate_visualizations
+
+depends_on: [calculate-asymmetry]
+
+inputs:
+  - name: nifti_path
+  - name: freesurfer_output
+
+outputs:
+  - name: visualization_paths
+    locations:
+      - data/outputs/{job_id}/visualizations/overlays/coronal/
+      - data/outputs/{job_id}/visualizations/overlays/axial/
+
+progress: 97
+current_step: "Generating visualizations..."
+
+validation: MRIProcessor._validate_visualizations
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "1224-1229"

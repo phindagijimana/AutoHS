@@ -1,0 +1,42 @@
+flowchart TB
+    subgraph intake["Phase 1: Intake"]
+        S1[01 Upload & Validate]
+        S2[02 Store File]
+        S3[03 Create Job]
+        S1 --> S2 --> S3
+    end
+
+    subgraph orch["Phase 2: Orchestration"]
+        S4[04 Queue Dispatch]
+        S5[05 Celery Task Start]
+        S3 --> S4 --> S5
+    end
+
+    subgraph proc["Phase 3: Processing"]
+        S6[06 System Validation]
+        S7[07 Prepare Input]
+        S8[08 FreeSurfer Segmentation]
+        S9[09 Extract Volumes]
+        S10[10 Calculate Asymmetry]
+        S11[11 Generate Visualizations]
+        S12[12 Save Results]
+        S5 --> S6 --> S7 --> S8 --> S9 --> S10 --> S11 --> S12
+    end
+
+    subgraph fin["Phase 4: Finalization"]
+        S13[13 Extract Metrics]
+        S14[14 Complete Job]
+        S15[15 Start Next Pending]
+        S12 --> S13 --> S14 --> S15
+    end
+
+    subgraph del["Phase 5: Delivery"]
+        S16[16 Dashboard]
+        S17[17 Slice Viewer]
+        S18[18 PDF Report]
+        S14 --> S16 & S17 & S18
+    end
+
+    S15 -.->|if pending| S4
+
+    style S8 fill:#ffe0e0,stroke:#c00

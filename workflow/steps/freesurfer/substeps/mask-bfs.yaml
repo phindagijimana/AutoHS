@@ -1,0 +1,13 @@
+id: mask-bfs
+name: Mask BFS
+macro: autorecon2-volonly
+log_marker: "#@# Mask BFS"
+
+description: Apply mask for boundary-following surface steps (skipped in volonly).
+
+weight: 0
+estimated_minutes: 0
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5082-5083"

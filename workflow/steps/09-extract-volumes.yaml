@@ -1,0 +1,36 @@
+id: extract-volumes
+name: Extract Hippocampal Volumes
+phase: processing
+order: 9
+
+description: >
+  Parse FreeSurfer aseg.stats to extract left and right hippocampal volumes (mm³).
+  Fail if no real hippocampal data found (no mock fallback in production).
+
+actor: worker
+module: pipeline/processors/mri_processor.py
+function: MRIProcessor._extract_hippocampal_data
+
+depends_on: [freesurfer-segmentation]
+
+inputs:
+  - name: freesurfer_output
+    description: Subject output directory
+
+outputs:
+  - name: hippocampal_stats
+    fields:
+      - left_hippocampus_volume_mm3
+      - right_hippocampus_volume_mm3
+      - subfield_breakdown
+
+progress: 92
+current_step: "Extracting hippocampal volumes..."
+
+on_failure:
+  exception: RuntimeError
+  message: "Hippocampal segmentation failed"
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "1200-1216"

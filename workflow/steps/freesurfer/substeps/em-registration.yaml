@@ -1,0 +1,13 @@
+id: em-registration
+name: EM Registration
+macro: autorecon2-volonly
+log_marker: "#@# EM Registration"
+
+description: Expectation-maximization registration to atlas.
+
+weight: 12
+estimated_minutes: 11.8
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5075-5076"

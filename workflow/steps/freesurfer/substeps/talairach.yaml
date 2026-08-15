@@ -1,0 +1,13 @@
+id: talairach
+name: Talairach Registration
+macro: autorecon1
+log_marker: "#@# Talairach"
+
+description: Register volume to Talairach space for standardized orientation.
+
+weight: 4
+estimated_minutes: 3.9
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5070-5071"

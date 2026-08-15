@@ -1,0 +1,50 @@
+id: freesurfer-segmentation
+name: FreeSurfer Segmentation
+phase: processing
+order: 8
+
+description: >
+  Run FreeSurfer recon-all inside a Docker container (freesurfer/freesurfer:7.4.1).
+  Whole-brain segmentation; longest step in the pipeline (typically 1–7 hours).
+  Nested sub-steps are defined in steps/freesurfer/pipeline.yaml.
+
+subpipeline: steps/freesurfer/pipeline.yaml
+
+actor: worker
+module: pipeline/processors/mri_processor.py
+function: MRIProcessor._run_freesurfer_primary
+
+depends_on: [prepare-input]
+
+container:
+  image: freesurfer/freesurfer:7.4.1
+  command: recon-all -i /input/{nifti} -s {subject_id} -autorecon1 -autorecon2-volonly
+  timeout_minutes: 420
+  requires: [Docker, FreeSurfer license.txt]
+
+inputs:
+  - name: nifti_path
+  - name: subject_id
+    description: Derived from job_id
+
+outputs:
+  - name: freesurfer_output
+    description: Subject output directory
+  - name: aseg.stats
+    description: Hippocampal volumes source
+
+progress_range: [20, 90]
+current_step: "Starting FreeSurfer segmentation... (phase-specific updates follow)"
+
+macro_phases:
+  - autorecon1
+  - autorecon2-volonly
+  - mri-segstats
+
+on_failure:
+  actions: [log recon-all-status.log, fail job, cleanup containers]
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  function: _run_freesurfer_primary
+  lines: "1195-1198, 2742-2775"

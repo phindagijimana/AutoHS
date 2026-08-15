@@ -1,0 +1,32 @@
+id: celery-task-start
+name: Celery Task Start
+phase: orchestration
+order: 5
+
+description: >
+  Celery worker picks up process_mri_task from Redis. Validates job exists,
+  checks idempotency, verifies container concurrency limits, sets progress to 5%.
+
+actor: worker
+module: workers/tasks/processing_web.py
+function: process_mri_task
+
+depends_on: [queue-dispatch]
+
+inputs:
+  - name: job_id
+    type: string (8-char UUID prefix)
+
+outputs:
+  - Job status RUNNING (if not already)
+  - MRIProcessor instance initialized
+
+progress_range: [5, 5]
+current_step: "Initializing MRI processor"
+
+on_failure:
+  actions: [JobService.fail_job, start_next_pending_job]
+
+code_reference:
+  file: workers/tasks/processing_web.py
+  lines: "192-287"

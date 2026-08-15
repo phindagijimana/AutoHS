@@ -1,0 +1,13 @@
+id: nu-intensity-correction
+name: NU Intensity Correction
+macro: autorecon1
+log_marker: "#@# NU Intensity Correction"
+
+description: Bias field correction for intensity non-uniformity.
+
+weight: 4
+estimated_minutes: 4.0
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5072-5073"

@@ -1,0 +1,23 @@
+id: pdf-report
+name: PDF Report
+phase: delivery
+order: 18
+
+description: >
+  Generate downloadable clinical-style PDF report with metrics table and
+  composite coronal slice images (same data as dashboard and viewer).
+
+actor: user
+module: backend/api/reports.py
+
+depends_on: [complete-job]
+
+api:
+  - GET /api/reports/{job_id}/pdf
+
+requirements:
+  - reportlab
+  - Pillow
+
+code_reference:
+  file: backend/api/reports.py

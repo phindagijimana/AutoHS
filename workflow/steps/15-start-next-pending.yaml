@@ -1,0 +1,26 @@
+id: start-next-pending
+name: Start Next Pending Job
+phase: finalization
+order: 15
+
+description: >
+  FIFO dequeue: if no RUNNING jobs, lock oldest PENDING job and submit
+  process_mri_task to Celery. Called after complete_job or fail_job.
+
+actor: worker
+module: workers/tasks/processing_web.py
+function: start_next_pending_job
+
+depends_on: [complete-job]
+optional: true
+
+conditions:
+  - running_count == 0
+  - pending job exists
+
+queue_policy: FIFO (order_by created_at asc)
+locking: with_for_update(skip_locked=True)
+
+code_reference:
+  file: workers/tasks/processing_web.py
+  lines: "134-189"

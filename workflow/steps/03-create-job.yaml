@@ -1,0 +1,34 @@
+id: create-job
+name: Create Job Record
+phase: intake
+order: 3
+
+description: >
+  Insert a job row in PostgreSQL with status PENDING. Enforce queue limits
+  (max 1 running + 5 pending). Attach patient metadata and file path.
+
+actor: backend
+module: backend/services/job_service.py
+function: JobService.create_job
+
+depends_on: [store-file]
+
+inputs:
+  - JobCreate schema (filename, file_path, patient fields, notes)
+
+outputs:
+  - name: job
+    type: Job
+    status: pending
+    fields: [id, filename, file_path, created_at, progress, current_step]
+
+queue_limits:
+  max_running: 1
+  max_pending: 5
+  on_queue_full:
+    http_status: 429
+    actions: [delete uploaded file, reject request]
+
+code_reference:
+  file: backend/api/upload_simple.py
+  lines: "154-196"

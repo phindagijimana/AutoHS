@@ -1,0 +1,20 @@
+id: ca-reg
+name: CA Registration
+macro: autorecon2-volonly
+log_marker: "#@# CA Reg"
+
+description: >
+  Cortical atlas registration. Longest FreeSurfer sub-phase (~2 hours).
+  Progress monitor captures memory snapshot when this phase starts.
+
+weight: 127
+estimated_minutes: 127
+critical: true
+
+monitoring:
+  memory_snapshot_on_start: true
+  resource_sampling_interval_seconds: 1
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5077-5078, 5283-5294"

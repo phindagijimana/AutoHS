@@ -1,0 +1,13 @@
+id: talairach-failure-detection
+name: Talairach Failure Detection
+macro: autorecon1
+log_marker: "#@# Talairach Failure Detection"
+
+description: Detect and handle Talairach registration failures.
+
+weight: 0
+estimated_minutes: 0
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5071-5072"

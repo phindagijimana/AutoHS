@@ -1,0 +1,27 @@
+id: queue-dispatch
+name: Queue Dispatch
+phase: orchestration
+order: 4
+
+description: >
+  If no job is currently RUNNING, immediately dispatch process_mri_task to Celery.
+  Otherwise leave job as PENDING; it will start when the running job completes.
+
+actor: backend
+module: backend/api/upload_simple.py
+
+depends_on: [create-job]
+
+conditions:
+  immediate_start: running_jobs == 0
+  deferred: running_jobs >= 1
+
+outputs:
+  - Celery task enqueued (immediate) OR job remains PENDING (deferred)
+
+broker: Redis
+task_name: process_mri_task
+
+code_reference:
+  file: backend/api/upload_simple.py
+  lines: "198-208"

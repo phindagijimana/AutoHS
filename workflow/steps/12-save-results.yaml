@@ -1,0 +1,25 @@
+id: save-results
+name: Save Results
+phase: processing
+order: 12
+
+description: >
+  Write metrics JSON, processing metadata, and output artifacts to the job
+  output directory. Clean up orphaned FreeSurfer containers for this job.
+
+actor: worker
+module: pipeline/processors/mri_processor.py
+function: MRIProcessor._save_results, _cleanup_job_containers
+
+depends_on: [generate-visualizations]
+
+outputs:
+  - output_dir: data/outputs/{job_id}/
+  - results dict returned to Celery task
+
+progress: 99
+current_step: "Saving results..."
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "1231-1242"

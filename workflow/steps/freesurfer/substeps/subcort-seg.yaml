@@ -1,0 +1,17 @@
+id: subcort-seg
+name: Subcortical Segmentation
+macro: autorecon2-volonly
+log_marker: "#@# Subcort Seg"
+
+description: Segment subcortical structures including hippocampus (aseg).
+
+weight: 32
+estimated_minutes: 32
+
+outputs:
+  - mri/aseg.mgz
+  - stats/aseg.stats
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5078-5079"

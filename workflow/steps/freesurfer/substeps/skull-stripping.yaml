@@ -1,0 +1,16 @@
+id: skull-stripping
+name: Skull Stripping
+macro: autorecon1
+log_marker: "#@# Skull Stripping"
+
+description: Remove non-brain tissue (skull, scalp) from the volume.
+
+weight: 16
+estimated_minutes: 15.8
+
+outputs:
+  - brain-extracted volume
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5074-5075"

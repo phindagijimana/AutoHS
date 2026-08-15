@@ -1,0 +1,25 @@
+id: slice-viewer
+name: Slice Viewer
+phase: delivery
+order: 17
+
+description: >
+  Interactive review of coronal/axial overlay PNGs with zoom, rotation,
+  and opacity controls. Serves images from /outputs/{job_id}/.
+
+actor: user
+module: frontend/src/pages/ViewerPage.jsx
+
+depends_on: [complete-job]
+
+api:
+  - GET /api/visualizations/{job_id}
+  - GET /outputs/{job_id}/{path}
+
+features:
+  - coronal / axial orientation
+  - overlay opacity
+  - zoom and rotation
+
+code_reference:
+  file: frontend/src/pages/ViewerPage.jsx

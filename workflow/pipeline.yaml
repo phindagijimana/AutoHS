@@ -1,0 +1,207 @@
+# NeuroInsight master pipeline definition
+# Maps the application to phases and steps. See workflow/steps/ for step details.
+
+name: neuroinsight
+version: "1.0.0"
+description: >
+  End-to-end hippocampal asymmetry analysis from T1-weighted MRI scans.
+  Upload NIfTI → FreeSurfer segmentation → volume extraction → asymmetry metrics → review.
+
+# ---------------------------------------------------------------------------
+# Global constraints
+# ---------------------------------------------------------------------------
+constraints:
+  max_running_jobs: 1
+  max_pending_jobs: 5
+  max_active_jobs: 6
+  supported_formats: [".nii", ".nii.gz"]
+  required_scan_type: T1-weighted
+  filename_hints: [t1, t1w, t1-weighted, mprage, spgr, fspgr, tfl, tfe]
+  freesurfer_timeout_minutes: 420
+  celery_task_timeout_hours: 10
+
+# ---------------------------------------------------------------------------
+# Job status state machine
+# ---------------------------------------------------------------------------
+job_states:
+  - id: pending
+    description: Job registered, waiting for worker slot
+  - id: running
+    description: Celery task active, MRIProcessor running
+  - id: completed
+    description: Metrics and visualizations saved
+  - id: failed
+    description: Processing error recorded in error_message
+  - id: cancelled
+    description: User cancelled or deleted while pending/running
+
+transitions:
+  - from: pending
+    to: running
+    trigger: celery_task_started
+  - from: running
+    to: completed
+    trigger: JobService.complete_job
+  - from: running
+    to: failed
+    trigger: JobService.fail_job
+  - from: [pending, running]
+    to: cancelled
+    trigger: JobService.delete_job
+
+# ---------------------------------------------------------------------------
+# Pipeline phases and steps
+# ---------------------------------------------------------------------------
+phases:
+
+  - id: intake
+    name: Intake
+    description: User uploads MRI and metadata via the web UI
+    steps:
+      - upload-validate
+      - store-file
+      - create-job
+
+  - id: orchestration
+    name: Orchestration
+    description: Job enters queue; Celery worker picks up when slot available
+    steps:
+      - queue-dispatch
+      - celery-task-start
+
+  - id: processing
+    name: MRI Processing
+    description: MRIProcessor runs the analysis pipeline (long-running)
+    steps:
+      - system-validation
+      - prepare-input
+      - freesurfer-segmentation
+      - extract-volumes
+      - calculate-asymmetry
+      - generate-visualizations
+      - save-results
+
+  - id: finalization
+    name: Finalization
+    description: Persist metrics, mark job complete, advance queue
+    steps:
+      - extract-metrics
+      - complete-job
+      - start-next-pending
+
+  - id: delivery
+    name: Delivery
+    description: User reviews results in dashboard, viewer, and PDF report
+    steps:
+      - dashboard-metrics
+      - slice-viewer
+      - pdf-report
+
+# ---------------------------------------------------------------------------
+# Step index (ordered execution for a single job)
+# ---------------------------------------------------------------------------
+execution_order:
+  - step: upload-validate
+    phase: intake
+    actor: backend
+    blocking: false
+
+  - step: store-file
+    phase: intake
+    actor: backend
+    depends_on: [upload-validate]
+
+  - step: create-job
+    phase: intake
+    actor: backend
+    depends_on: [store-file]
+    output_state: pending
+
+  - step: queue-dispatch
+    phase: orchestration
+    actor: backend
+    depends_on: [create-job]
+    condition: running_jobs == 0  # else stays pending until slot opens
+
+  - step: celery-task-start
+    phase: orchestration
+    actor: worker
+    depends_on: [queue-dispatch]
+    output_state: running
+
+  - step: system-validation
+    phase: processing
+    actor: worker
+    depends_on: [celery-task-start]
+    progress: 5
+
+  - step: prepare-input
+    phase: processing
+    actor: worker
+    depends_on: [system-validation]
+    progress: 10
+
+  - step: freesurfer-segmentation
+    phase: processing
+    actor: worker
+    depends_on: [prepare-input]
+    progress: [20, 90]
+    estimated_duration: "1–7 hours"
+    subpipeline: steps/freesurfer/pipeline.yaml
+
+  - step: extract-volumes
+    phase: processing
+    actor: worker
+    depends_on: [freesurfer-segmentation]
+    progress: 92
+
+  - step: calculate-asymmetry
+    phase: processing
+    actor: worker
+    depends_on: [extract-volumes]
+    progress: 95
+
+  - step: generate-visualizations
+    phase: processing
+    actor: worker
+    depends_on: [calculate-asymmetry]
+    progress: 97
+
+  - step: save-results
+    phase: processing
+    actor: worker
+    depends_on: [generate-visualizations]
+    progress: 99
+
+  - step: extract-metrics
+    phase: finalization
+    actor: worker
+    depends_on: [save-results]
+
+  - step: complete-job
+    phase: finalization
+    actor: worker
+    depends_on: [extract-metrics]
+    output_state: completed
+    progress: 100
+
+  - step: start-next-pending
+    phase: finalization
+    actor: worker
+    depends_on: [complete-job]
+    optional: true
+
+  - step: dashboard-metrics
+    phase: delivery
+    actor: user
+    depends_on: [complete-job]
+
+  - step: slice-viewer
+    phase: delivery
+    actor: user
+    depends_on: [complete-job]
+
+  - step: pdf-report
+    phase: delivery
+    actor: user
+    depends_on: [complete-job]

@@ -1,0 +1,21 @@
+id: dashboard-metrics
+name: Dashboard Metrics
+phase: delivery
+order: 16
+
+description: >
+  User views completed job metrics on the dashboard: asymmetry indices,
+  volumes, laterality classification, job status history.
+
+actor: user
+module: frontend/src/pages/DashboardPage.jsx
+
+depends_on: [complete-job]
+
+api:
+  - GET /api/jobs
+  - GET /api/jobs/{id}
+  - GET /api/metrics
+
+code_reference:
+  file: frontend/src/pages/DashboardPage.jsx

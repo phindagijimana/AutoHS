@@ -1,0 +1,13 @@
+id: fill
+name: Fill
+macro: autorecon2-volonly
+log_marker: "#@# Fill"
+
+description: Fill white matter volume; final autorecon2-volonly marker.
+
+weight: 2
+estimated_minutes: 2
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5084-5085"

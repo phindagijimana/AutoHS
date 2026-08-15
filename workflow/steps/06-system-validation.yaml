@@ -1,0 +1,29 @@
+id: system-validation
+name: System Validation
+phase: processing
+order: 6
+
+description: >
+  Before heavy processing, verify disk space, available memory, and network
+  connectivity (for Docker image pulls). Fail fast if requirements not met.
+
+actor: worker
+module: pipeline/processors/mri_processor.py
+
+depends_on: [celery-task-start]
+
+checks:
+  - validate_disk_space
+  - validate_memory
+  - validate_network_connectivity
+
+outputs:
+  - System ready for FreeSurfer container
+
+on_failure:
+  exception: RuntimeError / DockerNotAvailableError
+  user_message: Docker install/running instructions
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "1179-1189"

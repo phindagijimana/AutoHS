@@ -1,0 +1,27 @@
+id: complete-job
+name: Complete Job
+phase: finalization
+order: 14
+
+description: >
+  Mark job COMPLETED, set result_path and visualization payload, progress 100%.
+  Triggers automatic start of next PENDING job if queue has waiting jobs.
+
+actor: worker
+module: backend/services/job_service.py
+function: JobService.complete_job
+
+depends_on: [extract-metrics]
+
+outputs:
+  - job.status: completed
+  - job.result_path
+  - job.completed_at
+  - visualization URLs in job record
+
+progress: 100
+current_step: "Processing completed successfully"
+
+code_reference:
+  file: workers/tasks/processing_web.py
+  lines: "320-331"

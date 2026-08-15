@@ -1,0 +1,13 @@
+id: merge-aseg
+name: Merge Aseg
+macro: autorecon2-volonly
+log_marker: "#@# Merge aseg"
+
+description: Merge automatic subcortical segmentation labels.
+
+weight: 0
+estimated_minutes: 0
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5080-5081"

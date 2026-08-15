@@ -1,0 +1,101 @@
+# FreeSurfer nested sub-pipeline (step 08: freesurfer-segmentation)
+# Tracks recon-all phases parsed from scripts/recon-all-status.log (#@# markers)
+
+parent_step: freesurfer-segmentation
+command: recon-all -i /input/{nifti} -s {subject_id} -autorecon1 -autorecon2-volonly
+container_image: freesurfer/freesurfer:7.4.1
+progress_range: [20, 90]
+status_log: scripts/recon-all-status.log
+
+macro_phases:
+  - id: autorecon1
+    name: Auto Recon 1
+    description: Motion correction, Talairach registration, intensity correction, skull stripping
+    recon_flag: -autorecon1
+  - id: autorecon2-volonly
+    name: Auto Recon 2 (Volume Only)
+    description: EM registration, CA registration, subcortical segmentation, aseg merge
+    recon_flag: -autorecon2-volonly
+  - id: mri-segstats
+    name: MRI Segstats
+    description: Generate aseg.stats for hippocampal volume extraction
+    optional: true
+
+macro_execution_order:
+  - step: autorecon1
+    micro_steps: [motioncor, talairach, nu-intensity-correction, intensity-normalization, skull-stripping]
+  - step: autorecon2-volonly
+    micro_steps:
+      - em-registration
+      - ca-normalize
+      - ca-reg
+      - subcort-seg
+      - cc-seg
+      - merge-aseg
+      - intensity-normalization2
+      - mask-bfs
+      - wm-segmentation
+      - fill
+  - step: mri-segstats
+    depends_on: [autorecon2-volonly]
+
+# Micro phases — order and weights match pipeline/processors/mri_processor.py phase_weights
+micro_execution_order:
+  - step: motioncor
+    macro: autorecon1
+    weight: 1
+  - step: talairach
+    macro: autorecon1
+    weight: 4
+  - step: talairach-failure-detection
+    macro: autorecon1
+    weight: 0
+  - step: nu-intensity-correction
+    macro: autorecon1
+    weight: 4
+  - step: intensity-normalization
+    macro: autorecon1
+    weight: 2
+  - step: skull-stripping
+    macro: autorecon1
+    weight: 16
+  - step: em-registration
+    macro: autorecon2-volonly
+    weight: 12
+  - step: ca-normalize
+    macro: autorecon2-volonly
+    weight: 1
+  - step: ca-reg
+    macro: autorecon2-volonly
+    weight: 127
+  - step: subcort-seg
+    macro: autorecon2-volonly
+    weight: 32
+  - step: cc-seg
+    macro: autorecon2-volonly
+    weight: 1
+  - step: merge-aseg
+    macro: autorecon2-volonly
+    weight: 0
+  - step: intensity-normalization2
+    macro: autorecon2-volonly
+    weight: 2
+  - step: mask-bfs
+    macro: autorecon2-volonly
+    weight: 0
+  - step: wm-segmentation
+    macro: autorecon2-volonly
+    weight: 3
+  - step: fill
+    macro: autorecon2-volonly
+    weight: 2
+  - step: mri-segstats
+    macro: post-processing
+    depends_on: [fill]
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  functions:
+    - _run_freesurfer_primary
+    - _monitor_freesurfer_progress
+  lines: "5068-5344, 2742-2952"

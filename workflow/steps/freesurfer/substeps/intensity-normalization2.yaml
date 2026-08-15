@@ -1,0 +1,13 @@
+id: intensity-normalization2
+name: Intensity Normalization 2
+macro: autorecon2-volonly
+log_marker: "#@# Intensity Normalization2"
+
+description: Second-pass intensity normalization after segmentation.
+
+weight: 2
+estimated_minutes: 2.4
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5081-5082"

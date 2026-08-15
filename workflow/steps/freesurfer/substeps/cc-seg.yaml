@@ -1,0 +1,13 @@
+id: cc-seg
+name: Corpus Callosum Segmentation
+macro: autorecon2-volonly
+log_marker: "#@# CC Seg"
+
+description: Segment corpus callosum structures.
+
+weight: 1
+estimated_minutes: 0.8
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "5079-5080"

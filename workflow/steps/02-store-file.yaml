@@ -1,0 +1,34 @@
+id: store-file
+name: Store File
+phase: intake
+order: 2
+
+description: >
+  Persist uploaded NIfTI to local filesystem and mirror to MinIO (S3-compatible).
+  Generate a unique filename to avoid collisions.
+
+actor: backend
+module: backend/services/storage_service.py
+function: StorageService.save_upload_local_then_s3
+
+depends_on: [upload-validate]
+
+inputs:
+  - name: file_data
+    type: bytes
+  - name: unique_filename
+    type: string
+    pattern: "{uuid}_{original_filename}"
+
+outputs:
+  - name: storage_path
+    type: string
+    example: /data/uploads/abc123_patient_T1w.nii.gz
+
+on_failure:
+  http_status: 500
+  actions: [reject upload, no job created]
+
+code_reference:
+  file: backend/api/upload_simple.py
+  lines: "142-150"

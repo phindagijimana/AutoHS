@@ -1,0 +1,31 @@
+id: prepare-input
+name: Prepare Input
+phase: processing
+order: 7
+
+description: >
+  Validate NIfTI format and prepare input path for FreeSurfer. Save patient
+  info to output directory. DICOM must be converted to NIfTI externally (MRIcron).
+
+actor: worker
+module: pipeline/processors/mri_processor.py
+function: MRIProcessor._prepare_input
+
+depends_on: [system-validation]
+
+inputs:
+  - name: input_path
+    type: string
+    source: job.file_path
+
+outputs:
+  - name: nifti_path
+    type: Path
+    description: Ready for recon-all
+
+progress: 10
+current_step: "Preparing input file..."
+
+code_reference:
+  file: pipeline/processors/mri_processor.py
+  lines: "1191-1193"

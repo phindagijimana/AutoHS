@@ -1,0 +1,28 @@
+id: extract-metrics
+name: Extract Metrics to Database
+phase: finalization
+order: 13
+
+description: >
+  Parse output directory and persist structured hippocampal metrics to PostgreSQL
+  via MetricService for API and dashboard consumption.
+
+actor: worker
+module: backend/services/metric_service.py
+function: MetricService.extract_metrics
+
+depends_on: [save-results]
+
+inputs:
+  - job_id
+  - output_dir
+
+outputs:
+  - Metric rows linked to job
+
+progress: 90
+current_step: "Extracting metrics and generating visualizations"
+
+code_reference:
+  file: workers/tasks/processing_web.py
+  lines: "310-318"
