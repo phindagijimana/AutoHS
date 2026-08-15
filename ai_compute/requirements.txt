@@ -1,0 +1,5 @@
+numpy>=1.24
+nibabel>=5.0
+matplotlib>=3.5
+reportlab>=4.0
+Pillow>=10.0

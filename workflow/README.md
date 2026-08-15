@@ -1,114 +1,40 @@
-# AutoHS — Automated Hippocampal Sclerosis Workflow
+# AutoHS — Runnable Workflow
 
-This repository defines the **NeuroInsight / AutoHS** analysis pipeline as a structured, multi-step workflow. It documents how T1-weighted MRI scans flow from upload through FreeSurfer segmentation to asymmetry metrics and clinical review.
+Two-step hippocampal asymmetry pipeline:
 
-Each step maps to modules in the [NeuroInsight](https://github.com/phindagijimana/neuroinsight_local) application. Code references in step files point to that repo when run standalone here.
+| Step | ID | Container |
+|------|-----|-----------|
+| 1 | `freesurfer-processing` | `freesurfer/freesurfer:7.4.1` |
+| 2 | `ai-compute` | `autohs/ai-compute:latest` |
+
+## Run locally
+
+```bash
+./AutoHS install
+./AutoHS build
+./AutoHS submit scan_T1w.nii.gz
+./AutoHS run
+```
+
+## Step 2 — AI-compute container
+
+Post-processing and reporting:
+
+- Parse `aseg.stats` hippocampal volumes
+- Compute asymmetry index: `AI = (L − R) / (L + R)`
+- HS classification (Ndagijimana et al., Brain Communications, in press)
+- Optional coronal overlays
+- `report.json`, `report.pdf`, `summary.txt`
+
+Build only the container:
+
+```bash
+docker compose build ai-compute
+docker run --rm autohs/ai-compute:latest --help
+```
 
 ## Publication
 
 > Ndagijimana P, Brennan D, Shinohara R, Gugger J. **MRI derived hippocampal asymmetry identifies hippocampal sclerosis in epilepsy surgical specimens.** *Brain Communications*. Accepted (in press).
 
-**Asymmetry index:** `AI = (L − R) / (L + R)` where L and R are left and right hippocampal volumes (mm³).
-
-## Structure
-
-```
-workflow/
-├── README.md                 # This file
-├── __init__.py
-├── load_pipeline.py          # Python loader + validator
-├── validate.py               # CLI: python -m workflow.validate
-├── requirements.txt          # PyYAML (for loader/CI)
-├── pipeline.yaml             # Master pipeline (phases, steps, dependencies)
-├── steps/                    # One file per top-level step (01–18)
-│   ├── 01-upload-validate.yaml
-│   ├── ...
-│   ├── 08-freesurfer-segmentation.yaml
-│   └── freesurfer/           # Nested sub-pipeline for step 08
-│       ├── pipeline.yaml
-│       └── substeps/         # 17 FreeSurfer recon-all micro-phases
-├── tests/
-│   └── test_workflow.py
-└── diagrams/
-    └── pipeline.mmd
-```
-
-## Pipeline at a glance
-
-| Phase | Steps | Trigger |
-|-------|-------|---------|
-| **Intake** | Upload → Store → Register job | User uploads via UI |
-| **Orchestration** | Queue → Dispatch Celery task | API after job creation |
-| **Processing** | Validate → Prepare → FreeSurfer → Extract → Asymmetry → Visualize → Save | Celery worker |
-| **Finalization** | Extract metrics → Complete job → Start next pending | Celery worker |
-| **Delivery** | Dashboard → Viewer → PDF report | User views completed job |
-
-## Job status lifecycle
-
-```
-PENDING → RUNNING → COMPLETED
-                 ↘ FAILED
-                 ↘ CANCELLED (user delete)
-```
-
-Queue limits: **1 running** + **5 pending** jobs maximum.
-
-## Code mapping
-
-| Layer | Primary paths |
-|-------|----------------|
-| Upload / API | `backend/api/upload_simple.py` |
-| Job management | `backend/services/job_service.py` |
-| Task queue | `workers/tasks/processing_web.py` |
-| MRI pipeline | `pipeline/processors/mri_processor.py` |
-| Metrics | `pipeline/utils/asymmetry.py`, `backend/services/metric_service.py` |
-| Visualizations | `pipeline/utils/visualization.py`, `backend/api/visualizations.py` |
-| Reports | `backend/api/reports.py` |
-| Frontend | `frontend/src/pages/`, `frontend/src/components/` |
-
-## Using these definitions
-
-- **CLI:** Run `./AutoHS install`, `./AutoHS start`, `./AutoHS logs` from the repo root (see root README)
-- **Onboarding:** Read `pipeline.yaml`, then drill into `steps/` for each step's inputs, outputs, and code references.
-- **Debugging:** Match a stuck job's `current_step` / `progress` field to the step's `progress_range` in the step file.
-- **Validation:** Run `python -m workflow.validate` from the repo root
-- **Standalone repo:** Code-reference checks are skipped unless a `backend/` directory exists (full NeuroInsight checkout)
-- **CI:** GitHub Actions job `workflow-validation` runs on every push/PR.
-- **Future orchestration:** `pipeline.yaml` is structured so a workflow engine (Airflow, Temporal, custom runner) could load step metadata without rewriting business logic.
-
-## Python loader
-
-```python
-from workflow import PipelineLoader
-
-loader = PipelineLoader()
-pipeline = loader.load()
-errors = loader.validate()          # raises PipelineValidationError if invalid
-order = loader.get_execution_order()  # ['upload-validate', 'store-file', ...]
-step = loader.get_step("calculate-asymmetry")
-```
-
-## FreeSurfer sub-pipeline (step 08)
-
-Step `freesurfer-segmentation` has a nested pipeline at `steps/freesurfer/pipeline.yaml`:
-
-| Macro phase | Micro steps |
-|-------------|-------------|
-| **autorecon1** | motioncor → talairach → nu correction → intensity norm → skull stripping |
-| **autorecon2-volonly** | em reg → ca reg (longest) → subcort seg → … → fill |
-| **post-processing** | mri_segstats → aseg.stats |
-
-Progress within 20–90% is driven by `#@#` markers in `recon-all-status.log` (see `mri_processor.py` phase_weights).
-
-## Progress ranges (processing phase)
-
-| Progress | Step |
-|----------|------|
-| 5% | Celery task init |
-| 10% | Prepare input |
-| 20–90% | FreeSurfer segmentation |
-| 92% | Extract hippocampal volumes |
-| 95% | Calculate asymmetry |
-| 97% | Generate visualizations |
-| 99% | Save results |
-| 100% | Job complete |
+Legacy 18-step specification files are archived under `steps/archive/`. FreeSurfer micro-phases remain documented under `steps/freesurfer/`.

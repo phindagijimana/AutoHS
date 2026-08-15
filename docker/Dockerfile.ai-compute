@@ -1,0 +1,19 @@
+FROM python:3.11-slim
+
+LABEL org.opencontainers.image.title="ai-compute" \
+      org.opencontainers.image.description="AutoHS step 2 — post-processing and reporting"
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ai_compute/requirements.txt /app/ai_compute/requirements.txt
+RUN pip install --no-cache-dir -r /app/ai_compute/requirements.txt
+
+COPY ai_compute /app/ai_compute
+
+ENV PYTHONPATH=/app
+ENTRYPOINT ["python", "-m", "ai_compute.main"]

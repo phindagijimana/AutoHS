@@ -1,0 +1,30 @@
+id: ai-compute
+name: AI-compute Post-processing & Reporting
+phase: processing
+order: 2
+
+description: >
+  Step 2 — Run in the ai-compute container: extract hippocampal volumes,
+  compute asymmetry index (AI = (L−R)/(L+R)), HS classification, overlays,
+  JSON summary, and PDF report.
+
+actor: runner
+container: autohs/ai-compute:latest
+depends_on: [freesurfer-processing]
+
+inputs:
+  - name: t1_nifti
+  - name: freesurfer_dir
+  - name: aseg.stats
+
+outputs:
+  - name: report.json
+  - name: report.pdf
+  - name: summary.txt
+  - name: visualizations/
+
+progress_range: [60, 100]
+
+code_reference:
+  file: ai_compute/main.py
+  function: run

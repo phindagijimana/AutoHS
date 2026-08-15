@@ -1,0 +1,8 @@
+services:
+  ai-compute:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.ai-compute
+    image: autohs/ai-compute:latest
+    container_name: ai-compute
+    profiles: ["build"]

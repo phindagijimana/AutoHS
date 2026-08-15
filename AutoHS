@@ -49,15 +49,90 @@ AutoHS — Automated Hippocampal Sclerosis Workflow CLI
 
 Usage:
   ./AutoHS install          Install Python deps and validate pipeline
-  ./AutoHS start            Validate workflow and run tests (logs output)
+  ./AutoHS build            Build ai-compute Docker image (step 2)
+  ./AutoHS submit <nii>     Submit T1 NIfTI job to queue
+  ./AutoHS run              Run pending job when resources available
+  ./AutoHS queue            List jobs in queue
+  ./AutoHS start            Validate workflow and run unit tests
   ./AutoHS logs             Show workflow log output
   ./AutoHS stop             Stop background watch mode (if running)
-  ./AutoHS status           Show install and validation status
+  ./AutoHS status           Show install, resources, and validation status
+
+Workflow (2 steps):
+  1. FreeSurfer processing  (Docker: freesurfer/freesurfer:7.4.1)
+  2. AI-compute             (Docker: autohs/ai-compute:latest)
 
 Examples:
-  ./AutoHS install && ./AutoHS start
-  ./AutoHS logs
+  ./AutoHS install && ./AutoHS build
+  ./AutoHS submit scan_T1w.nii.gz
+  ./AutoHS run
+  ./AutoHS queue
 EOF
+}
+
+cmd_build() {
+  if ! command -v docker &>/dev/null; then
+    log_error "docker is required to build ai-compute"
+    exit 1
+  fi
+  log_info "Building ai-compute container..."
+  docker compose build ai-compute
+  log_ok "Built autohs/ai-compute:latest"
+  append_log "build ai-compute completed"
+}
+
+cmd_submit() {
+  local input_file="${1:-}"
+  if [[ -z "$input_file" ]]; then
+    log_error "Usage: ./AutoHS submit <file.nii|file.nii.gz>"
+    exit 1
+  fi
+  PY="$(python_bin)"
+  job_id=$($PY -c "
+from pathlib import Path
+from workflow.runner import WorkflowRunner
+runner = WorkflowRunner(Path('$ROOT'))
+print(runner.submit(Path('$input_file')))
+")
+  log_ok "Submitted job $job_id"
+  append_log "submitted job $job_id"
+  echo "  Run: ./AutoHS run"
+}
+
+cmd_run() {
+  PY="$(python_bin)"
+  append_log "run invoked"
+  $PY -c "
+from pathlib import Path
+from workflow.runner import WorkflowRunner
+runner = WorkflowRunner(Path('$ROOT'))
+job_id = runner.run_pending_if_resources_available()
+if job_id:
+    print(f'Completed run for job {job_id}')
+else:
+    print('No job started (queue empty or resources unavailable)')
+" 2>&1 | tee -a "$LOG_FILE"
+}
+
+cmd_queue() {
+  PY="$(python_bin)"
+  $PY -c "
+from pathlib import Path
+from workflow.runner import WorkflowRunner
+from workflow.resources import assess_resources
+runner = WorkflowRunner(Path('$ROOT'))
+jobs = runner.queue.list_jobs()
+print('ID        STATUS     STEP                  PROGRESS  INPUT')
+print('-' * 72)
+for j in jobs:
+    inp = Path(j.input_path).name
+    print(f'{j.id:<8}  {j.status:<9}  {(j.step or \"-\"):<20}  {j.progress:>3}%      {inp}')
+status = assess_resources(runner.data_dir, runner.queue.count_by_status('running'))
+print()
+print('Resources:', 'READY' if status.ok else 'NOT READY')
+for r in status.reasons:
+    print(' -', r)
+"
 }
 
 cmd_install() {
@@ -179,6 +254,10 @@ main() {
 
   case "$cmd" in
     install) cmd_install "$@" ;;
+    build)   cmd_build "$@" ;;
+    submit)  cmd_submit "$@" ;;
+    run)     cmd_run "$@" ;;
+    queue)   cmd_queue "$@" ;;
     start)   cmd_start "$@" ;;
     logs)    cmd_logs "$@" ;;
     stop)    cmd_stop "$@" ;;

@@ -34,7 +34,7 @@ def main() -> int:
     freesurfer_count = len(pipeline.freesurfer_substeps)
     execution_order = loader.get_execution_order()
 
-    print("NeuroInsight workflow validation")
+    print("AutoHS workflow validation")
     print(f"  Pipeline: {pipeline.data.get('name')} v{pipeline.data.get('version')}")
     print(f"  Top-level steps: {step_count}")
     print(f"  FreeSurfer substeps: {freesurfer_count}")

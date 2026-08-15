@@ -1,0 +1,27 @@
+id: freesurfer-processing
+name: FreeSurfer Processing
+phase: processing
+order: 1
+
+description: >
+  Step 1 — Run FreeSurfer recon-all in Docker on the T1 NIfTI input.
+  Generates subcortical segmentation and aseg.stats for hippocampal volumes.
+
+actor: runner
+container: freesurfer/freesurfer:7.4.1
+subpipeline: steps/freesurfer/pipeline.yaml
+
+inputs:
+  - name: t1_nifti
+    type: file
+    formats: [".nii", ".nii.gz"]
+
+outputs:
+  - name: freesurfer_dir
+  - name: aseg.stats
+
+progress_range: [5, 55]
+
+code_reference:
+  file: workflow/runner.py
+  function: _run_freesurfer

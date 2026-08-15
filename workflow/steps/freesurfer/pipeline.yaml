@@ -1,7 +1,7 @@
 # FreeSurfer nested sub-pipeline (step 08: freesurfer-segmentation)
 # Tracks recon-all phases parsed from scripts/recon-all-status.log (#@# markers)
 
-parent_step: freesurfer-segmentation
+parent_step: freesurfer-processing
 command: recon-all -i /input/{nifti} -s {subject_id} -autorecon1 -autorecon2-volonly
 container_image: freesurfer/freesurfer:7.4.1
 progress_range: [20, 90]

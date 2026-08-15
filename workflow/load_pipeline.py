@@ -290,7 +290,9 @@ class PipelineLoader:
         assert self._pipeline is not None
         errors: list[str] = []
 
-        parent_step = self._pipeline.steps.get("freesurfer-segmentation")
+        parent_step = self._pipeline.steps.get("freesurfer-processing")
+        if not parent_step:
+            parent_step = self._pipeline.steps.get("freesurfer-segmentation")
         if not parent_step:
             return errors
 

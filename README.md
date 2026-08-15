@@ -2,57 +2,74 @@
 
 **Automated Hippocampal Sclerosis Workflow** — a structured, machine-readable pipeline for T1-weighted MRI analysis: hippocampal segmentation, volumetric extraction, asymmetry indexing, and clinical review.
 
-AutoHS documents the end-to-end workflow used by [NeuroInsight](https://github.com/phindagijimana/neuroinsight_local). It is a standalone specification you can validate, extend, or plug into orchestration tools (Airflow, Temporal, etc.) without shipping the full application.
+AutoHS is a **runnable two-step workflow** for hippocampal asymmetry analysis from T1-weighted MRI. It queues jobs and runs them when Docker and system resources are available.
 
 ## What this repo contains
 
 ```
 AutoHS/
-├── AutoHS                  # Workflow CLI (install, start, logs, stop)
-├── README.md
-└── workflow/               # Pipeline definitions, loader, tests
-    ├── README.md           # Detailed workflow documentation
-    ├── pipeline.yaml       # Master pipeline (5 phases, 18 steps)
-    ├── steps/              # Per-step YAML specs
-    ├── load_pipeline.py    # Python loader + validator
-    └── validate.py         # CLI validation tool
+├── AutoHS                  # CLI: install, build, submit, run, queue, logs
+├── ai_compute/             # Step 2 container code (post-processing + reporting)
+├── docker/
+│   └── Dockerfile.ai-compute
+├── docker-compose.yml
+├── workflow/
+│   ├── pipeline.yaml       # 2-step runnable pipeline
+│   ├── runner.py           # Orchestrates FreeSurfer → AI-compute
+│   ├── queue.py            # SQLite job queue
+│   └── steps/
+│       ├── 01-freesurfer-processing.yaml
+│       └── 02-ai-compute.yaml
+└── data/jobs/              # Job workspaces (created at runtime)
 ```
 
-## CLI
+## Runnable workflow (2 steps)
 
-AutoHS includes a command-line tool for installing dependencies, validating the pipeline, and viewing logs:
+| Step | Name | Container | What it does |
+|------|------|-----------|--------------|
+| **1** | FreeSurfer processing | `freesurfer/freesurfer:7.4.1` | `recon-all` + `mri_segstats` → `aseg.stats` |
+| **2** | AI-compute | `autohs/ai-compute:latest` | Extract volumes, asymmetry index, overlays, PDF report |
+
+Jobs stay **pending** until `./AutoHS run` and resources are ready (Docker, disk, RAM, images, queue slot).
+
+## CLI
 
 ```bash
 chmod +x ./AutoHS
 
-./AutoHS install    # Create venv, install deps, validate pipeline
-./AutoHS start      # Validate workflow and run tests
-./AutoHS logs       # Show recent log output
-./AutoHS stop       # Stop background process (if any)
-./AutoHS status     # Show install and validation status
+./AutoHS install              # Python deps + validate pipeline
+./AutoHS build                # Build ai-compute container
+./AutoHS submit scan_T1w.nii.gz
+./AutoHS run                  # Run pending job if resources available
+./AutoHS queue                # List jobs + resource status
+./AutoHS logs
+./AutoHS status
 ```
 
 | Command | Description |
 |---------|-------------|
-| `install` | Create `venv/`, install `workflow/requirements.txt`, run initial validation |
-| `start` | Validate pipeline + run unit tests; output appended to `logs/autohs.log` |
-| `logs` | Tail last 80 lines of `logs/autohs.log` (use `logs -f` to follow) |
-| `stop` | Stop background watch process if running |
-| `status` | Print environment info and run validation |
+| `install` | Create `venv/`, install dependencies, validate pipeline |
+| `build` | Build `autohs/ai-compute:latest` from `docker/Dockerfile.ai-compute` |
+| `submit` | Queue a T1 NIfTI scan for processing |
+| `run` | Execute step 1 then step 2 for oldest pending job when resources allow |
+| `queue` | Show job queue and resource readiness |
+| `start` | Validate pipeline + run unit tests |
+| `logs` | Tail `logs/autohs.log` |
 
-Logs are written to `logs/autohs.log`.
+### Prerequisites
 
-## Pipeline overview
+- Docker (with `freesurfer/freesurfer:7.4.1` pulled)
+- FreeSurfer `license.txt` in repo root (see `license.txt.example`)
+- T1 NIfTI input (`.nii` or `.nii.gz`)
 
-| Phase | Description |
-|-------|-------------|
-| **Intake** | Upload T1 NIfTI, store file, register job |
-| **Orchestration** | Queue dispatch and task startup |
-| **Processing** | FreeSurfer segmentation → volume extraction → asymmetry → visualizations |
-| **Finalization** | Persist metrics, complete job, advance queue |
-| **Delivery** | Dashboard, slice viewer, PDF report |
+```bash
+cp license.txt.example license.txt   # then paste your FreeSurfer license
+./AutoHS install && ./AutoHS build
+./AutoHS submit path/to/T1w.nii.gz
+./AutoHS run
+```
 
-**18 top-level steps**, including a nested **17-step FreeSurfer sub-pipeline** (motion correction through `mri_segstats`).
+Outputs per job: `data/jobs/{job_id}/output/report.json`, `report.pdf`, `summary.txt`
 
 ## Hippocampal asymmetry index
 
@@ -76,7 +93,7 @@ AI = (L − R) / (L + R)
 - **AI < 0** — right hippocampus larger than left  
 - **AI ≈ 0** — symmetric volumes  
 
-This metric is computed in workflow step `calculate-asymmetry` and is central to the AutoHS screening workflow described in the associated publication.
+This metric is computed in **AI-compute (step 2)** and is central to the AutoHS screening workflow described in the associated publication.
 
 ## Citation
 
@@ -134,9 +151,13 @@ Step files include `code_reference` fields pointing to NeuroInsight source modul
 ## Requirements
 
 - Python 3.9+
-- PyYAML (`workflow/requirements.txt`)
+- Docker
+- FreeSurfer license (`license.txt`)
+- PyYAML, psutil (`workflow/requirements.txt`)
 
-No Redis, PostgreSQL, or Docker required to **validate** the workflow definitions. Running actual MRI processing requires the NeuroInsight application stack.
+No Redis or PostgreSQL required — jobs are tracked in SQLite at `data/autohs.db`.
+
+Implementation reference: [NeuroInsight](https://github.com/phindagijimana/neuroinsight_local) (full web application).
 
 ## License
 
