@@ -16,6 +16,7 @@ from workflow.resources import assess_resources
 logger = logging.getLogger(__name__)
 
 FREESURFER_IMAGE = os.getenv("FREESURFER_IMAGE", "freesurfer/freesurfer:7.4.1")
+FASTSURFER_IMAGE = os.getenv("FASTSURFER_IMAGE", "deepmi/fastsurfer:latest")
 AI_COMPUTE_IMAGE = os.getenv("AI_COMPUTE_IMAGE", "autohs/ai-compute:latest")
 MAX_RUNNING = int(os.getenv("AUTOHS_MAX_RUNNING", "1"))
 
@@ -27,7 +28,7 @@ class WorkflowRunner:
         self.jobs_dir = self.data_dir / "jobs"
         self.queue = JobQueue(self.data_dir / "autohs.db")
 
-    def submit(self, input_path: Path) -> str:
+    def submit(self, input_path: Path, *, fastsurfer: bool = False) -> str:
         input_path = input_path.resolve()
         if not input_path.exists():
             raise FileNotFoundError(input_path)
@@ -35,7 +36,12 @@ class WorkflowRunner:
         if not (name.endswith(".nii") or name.endswith(".nii.gz")):
             raise ValueError("Input must be .nii or .nii.gz")
 
-        job = self.queue.create_job(input_path, self.jobs_dir / "pending")
+        segmentation = "fastsurfer" if fastsurfer else "freesurfer"
+        job = self.queue.create_job(
+            input_path,
+            self.jobs_dir / "pending",
+            segmentation=segmentation,
+        )
         work_dir = self.jobs_dir / job.id
         work_dir.mkdir(parents=True, exist_ok=True)
         input_dir = work_dir / "input"
@@ -59,7 +65,9 @@ class WorkflowRunner:
             running_jobs=self.queue.count_by_status("running"),
             max_running=MAX_RUNNING,
             freesurfer_image=FREESURFER_IMAGE,
+            fastsurfer_image=FASTSURFER_IMAGE,
             ai_compute_image=AI_COMPUTE_IMAGE,
+            segmentation=pending.segmentation,
         )
         if not status.ok:
             logger.info("Resources not ready: %s", "; ".join(status.reasons))
@@ -73,18 +81,24 @@ class WorkflowRunner:
         work_dir = Path(job.work_dir or self.jobs_dir / job_id)
         input_file = Path(job.input_path)
         subject_id = f"job_{job_id}"
+        use_fastsurfer = job.segmentation == "fastsurfer"
+        step_name = "fastsurfer-processing" if use_fastsurfer else "freesurfer-processing"
 
         self.queue.update_job(
             job_id,
             status="running",
-            step="freesurfer-processing",
+            step=step_name,
             progress=5,
             started_at=datetime.now(timezone.utc).isoformat(),
         )
         try:
-            freesurfer_dir = self._run_freesurfer(job_id, input_file, work_dir, subject_id)
+            seg_dir = (
+                self._run_fastsurfer(job_id, input_file, work_dir, subject_id)
+                if use_fastsurfer
+                else self._run_freesurfer(job_id, input_file, work_dir, subject_id)
+            )
             self.queue.update_job(job_id, step="ai-compute", progress=60)
-            result_dir = self._run_ai_compute(job_id, input_file, freesurfer_dir, work_dir, subject_id)
+            result_dir = self._run_ai_compute(job_id, input_file, seg_dir, work_dir, subject_id)
             self.queue.update_job(
                 job_id,
                 status="completed",
@@ -159,6 +173,70 @@ class WorkflowRunner:
             raise FileNotFoundError(f"FreeSurfer finished but missing {stats_file}")
 
         return freesurfer_dir
+
+    def _run_fastsurfer(
+        self, job_id: str, input_file: Path, work_dir: Path, subject_id: str
+    ) -> Path:
+        freesurfer_dir = work_dir / "freesurfer"
+        freesurfer_dir.mkdir(parents=True, exist_ok=True)
+        subject_dir = freesurfer_dir / subject_id
+        if subject_dir.exists():
+            shutil.rmtree(subject_dir)
+
+        import os as _os
+
+        cpu_count = _os.cpu_count() or 4
+        num_threads = max(1, cpu_count - 2)
+        container_name = f"autohs-fastsurfer-{job_id}"
+        subprocess.run(["docker", "rm", "-f", container_name], capture_output=True, check=False)
+
+        cmd = [
+            "docker",
+            "run",
+            "--rm",
+            "--name",
+            container_name,
+            "-v",
+            f"{input_file.parent.resolve()}:/input:ro",
+            "-v",
+            f"{freesurfer_dir.resolve()}:/output",
+            FASTSURFER_IMAGE,
+            "--t1",
+            f"/input/{input_file.name}",
+            "--sid",
+            subject_id,
+            "--sd",
+            "/output",
+            "--seg_only",
+            "--device",
+            "cpu",
+            "--batch",
+            "1",
+            "--threads",
+            str(num_threads),
+            "--viewagg_device",
+            "cpu",
+        ]
+
+        logger.info("Starting FastSurfer container for job %s", job_id)
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        if result.returncode != 0:
+            tail = (result.stderr or result.stdout or "")[-2000:]
+            raise RuntimeError(f"FastSurfer step failed (exit {result.returncode}): {tail}")
+
+        stats_file = self._find_segmentation_stats(subject_dir)
+        if not stats_file:
+            raise FileNotFoundError(
+                f"FastSurfer finished but missing hippocampal stats under {subject_dir}"
+            )
+
+        return freesurfer_dir
+
+    @staticmethod
+    def _find_segmentation_stats(subject_dir: Path) -> Path | None:
+        from ai_compute.extract import find_aseg_stats
+
+        return find_aseg_stats(subject_dir.parent, subject_dir.name)
 
     def _run_ai_compute(
         self,

@@ -1,8 +1,41 @@
 # AutoHS
 
-**Automated Hippocampal Sclerosis Workflow** — a structured, machine-readable pipeline for T1-weighted MRI analysis: hippocampal segmentation, volumetric extraction, asymmetry indexing, and clinical review.
+[![CI](https://github.com/phindagijimana/AutoHS/actions/workflows/ci.yml/badge.svg)](https://github.com/phindagijimana/AutoHS/actions/workflows/ci.yml)
+[![Documentation](https://readthedocs.org/projects/autohs/badge/?version=latest)](https://autohs.readthedocs.io/en/latest/?badge=latest)
+
+**Automated Hippocampal Sclerosis Workflow** — a BIDS App and runnable pipeline for T1-weighted MRI: hippocampal segmentation, volumetric extraction, asymmetry indexing, and clinical review.
+
+📖 **Documentation:** [autohs.readthedocs.io](https://autohs.readthedocs.io)
+
+🐳 **Docker:** `docker pull autohs/autohs:latest` (after release; see [Maintainers](docs/source/maintainers.rst))
 
 AutoHS is a **runnable two-step workflow** for hippocampal asymmetry analysis from T1-weighted MRI. It queues jobs and runs them when Docker and system resources are available.
+
+## BIDS App
+
+AutoHS follows the [BIDS Apps](https://bids.neuroimaging.io/bids_apps.html) specification.
+
+```bash
+# Install BIDS dependencies
+pip install -r requirements-bids.txt
+
+# Run on a BIDS dataset (Apptainer/HPC example)
+python run.py /path/to/bids /path/to/output participant \
+  --participant-label 001 \
+  --fastsurfer \
+  --runtime apptainer
+
+# Docker
+docker build -f docker/Dockerfile.bidsapp -t autohs/autohs:latest .
+docker run --rm -v /data/bids:/data:ro -v /data/out:/out autohs/autohs:latest \
+  /data /out participant --participant-label 001 --fastsurfer
+```
+
+Outputs: `output/autohs/sub-*/` with `report.json`, `report.pdf`, `summary.txt`.
+
+Full documentation: [docs/source/index.rst](docs/source/index.rst) (Sphinx / Read the Docs layout, QSIPrep-style).
+
+See also the legacy `./AutoHS` CLI for single-file job queue workflows.
 
 ## What this repo contains
 

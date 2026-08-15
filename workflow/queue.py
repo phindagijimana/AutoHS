@@ -23,6 +23,7 @@ class Job:
     result_path: Optional[str] = None
     step: Optional[str] = None
     progress: int = 0
+    segmentation: str = "freesurfer"
 
 
 class JobQueue:
@@ -51,22 +52,44 @@ class JobQueue:
                     work_dir TEXT,
                     result_path TEXT,
                     step TEXT,
-                    progress INTEGER DEFAULT 0
+                    progress INTEGER DEFAULT 0,
+                    segmentation TEXT DEFAULT 'freesurfer'
                 )
                 """
             )
+            columns = {
+                row[1] for row in conn.execute("PRAGMA table_info(jobs)").fetchall()
+            }
+            if "segmentation" not in columns:
+                conn.execute(
+                    "ALTER TABLE jobs ADD COLUMN segmentation TEXT DEFAULT 'freesurfer'"
+                )
             conn.commit()
 
-    def create_job(self, input_path: Path, work_dir: Path) -> Job:
+    def create_job(
+        self,
+        input_path: Path,
+        work_dir: Path,
+        *,
+        segmentation: str = "freesurfer",
+    ) -> Job:
         job_id = uuid.uuid4().hex[:8]
         now = datetime.now(timezone.utc).isoformat()
         with self._connect() as conn:
             conn.execute(
                 """
-                INSERT INTO jobs (id, input_path, status, created_at, work_dir, step, progress)
-                VALUES (?, ?, 'pending', ?, ?, 'queued', 0)
+                INSERT INTO jobs (
+                    id, input_path, status, created_at, work_dir, step, progress, segmentation
+                )
+                VALUES (?, ?, 'pending', ?, ?, 'queued', 0, ?)
                 """,
-                (job_id, str(input_path.resolve()), now, str(work_dir.resolve())),
+                (
+                    job_id,
+                    str(input_path.resolve()),
+                    now,
+                    str(work_dir.resolve()),
+                    segmentation,
+                ),
             )
             conn.commit()
         return self.get_job(job_id)

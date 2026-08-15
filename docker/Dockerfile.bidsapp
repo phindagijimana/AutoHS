@@ -1,0 +1,29 @@
+FROM python:3.11-slim
+
+LABEL org.opencontainers.image.title="AutoHS BIDS App" \
+      org.opencontainers.image.description="Automated hippocampal sclerosis workflow (BIDS App)"
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements-bids.txt /tmp/requirements-bids.txt
+COPY workflow/requirements.txt /tmp/workflow-requirements.txt
+COPY ai_compute/requirements.txt /tmp/ai-compute-requirements.txt
+RUN pip install --no-cache-dir \
+    -r /tmp/requirements-bids.txt \
+    -r /tmp/workflow-requirements.txt \
+    -r /tmp/ai-compute-requirements.txt
+
+COPY . /app
+ENV PYTHONPATH=/app
+ENV AUTOHS_RUNTIME=docker
+
+COPY version /app/version
+RUN chmod +x /app/run.py /app/run
+
+ENTRYPOINT ["/app/run.py"]

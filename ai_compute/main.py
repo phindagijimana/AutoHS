@@ -18,11 +18,11 @@ def find_aseg_mgz(freesurfer_dir: Path, subject_id: str) -> Path | None:
     candidates = [
         freesurfer_dir / subject_id / "mri" / "aseg.mgz",
         freesurfer_dir / subject_id / "mri" / "aseg.auto.mgz",
+        freesurfer_dir / subject_id / "mri" / "aparc+aseg.mgz",
     ]
-    for path in freesurfer_dir.rglob("aseg.mgz"):
-        candidates.append(path)
-    for path in freesurfer_dir.rglob("aseg.auto.mgz"):
-        candidates.append(path)
+    for pattern in ("aseg.mgz", "aseg.auto.mgz", "aparc+aseg.mgz"):
+        for path in freesurfer_dir.rglob(pattern):
+            candidates.append(path)
     for candidate in candidates:
         if candidate.exists():
             return candidate

@@ -51,6 +51,7 @@ Usage:
   ./AutoHS install          Install Python deps and validate pipeline
   ./AutoHS build            Build ai-compute Docker image (step 2)
   ./AutoHS submit <nii>     Submit T1 NIfTI job to queue
+  ./AutoHS submit --fastsurfer <nii>   Submit with FastSurfer (faster)
   ./AutoHS run              Run pending job when resources available
   ./AutoHS queue            List jobs in queue
   ./AutoHS start            Validate workflow and run unit tests
@@ -59,12 +60,13 @@ Usage:
   ./AutoHS status           Show install, resources, and validation status
 
 Workflow (2 steps):
-  1. FreeSurfer processing  (Docker: freesurfer/freesurfer:7.4.1)
+  1. Segmentation            FreeSurfer (default) or FastSurfer (--fastsurfer)
   2. AI-compute             (Docker: autohs/ai-compute:latest)
 
 Examples:
   ./AutoHS install && ./AutoHS build
   ./AutoHS submit scan_T1w.nii.gz
+  ./AutoHS submit --fastsurfer scan_T1w.nii.gz
   ./AutoHS run
   ./AutoHS queue
 EOF
@@ -82,9 +84,34 @@ cmd_build() {
 }
 
 cmd_submit() {
-  local input_file="${1:-}"
+  local input_file=""
+  local fastsurfer=0
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --fastsurfer)
+        fastsurfer=1
+        shift
+        ;;
+      -h|--help)
+        echo "Usage: ./AutoHS submit [--fastsurfer] <file.nii|file.nii.gz>"
+        exit 0
+        ;;
+      -*)
+        log_error "Unknown option: $1"
+        exit 1
+        ;;
+      *)
+        if [[ -n "$input_file" ]]; then
+          log_error "Unexpected argument: $1"
+          exit 1
+        fi
+        input_file="$1"
+        shift
+        ;;
+    esac
+  done
   if [[ -z "$input_file" ]]; then
-    log_error "Usage: ./AutoHS submit <file.nii|file.nii.gz>"
+    log_error "Usage: ./AutoHS submit [--fastsurfer] <file.nii|file.nii.gz>"
     exit 1
   fi
   PY="$(python_bin)"
@@ -92,11 +119,16 @@ cmd_submit() {
 from pathlib import Path
 from workflow.runner import WorkflowRunner
 runner = WorkflowRunner(Path('$ROOT'))
-print(runner.submit(Path('$input_file')))
+print(runner.submit(Path('$input_file'), fastsurfer=bool($fastsurfer)))
 ")
-  log_ok "Submitted job $job_id"
-  append_log "submitted job $job_id"
+  if [[ "$fastsurfer" -eq 1 ]]; then
+    log_ok "Submitted job $job_id (FastSurfer)"
+  else
+    log_ok "Submitted job $job_id"
+  fi
+  append_log "submitted job $job_id fastsurfer=$fastsurfer"
   echo "  Run: ./AutoHS run"
+  echo "  Or:  sbatch --job-name=autohs scripts/sbatch_run_job.sh $job_id$([[ $fastsurfer -eq 1 ]] && echo ' --fastsurfer')"
 }
 
 cmd_run() {
@@ -122,11 +154,12 @@ from workflow.runner import WorkflowRunner
 from workflow.resources import assess_resources
 runner = WorkflowRunner(Path('$ROOT'))
 jobs = runner.queue.list_jobs()
-print('ID        STATUS     STEP                  PROGRESS  INPUT')
-print('-' * 72)
+print('ID        SEG        STATUS     STEP                  PROGRESS  INPUT')
+print('-' * 82)
 for j in jobs:
     inp = Path(j.input_path).name
-    print(f'{j.id:<8}  {j.status:<9}  {(j.step or \"-\"):<20}  {j.progress:>3}%      {inp}')
+    seg = (getattr(j, 'segmentation', 'freesurfer') or 'freesurfer')[:10]
+    print(f'{j.id:<8}  {seg:<10}  {j.status:<9}  {(j.step or \"-\"):<20}  {j.progress:>3}%      {inp}')
 status = assess_resources(runner.data_dir, runner.queue.count_by_status('running'))
 print()
 print('Resources:', 'READY' if status.ok else 'NOT READY')
