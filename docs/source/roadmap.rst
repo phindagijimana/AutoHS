@@ -13,18 +13,18 @@ Stage 1 — Publish
 
 Connect Read the Docs and Docker Hub secrets (see :doc:`maintainers`).
 
-Stage 2 — BIDS derivatives compliance (current)
------------------------------------------------
+Stage 2 — BIDS derivatives compliance
+-------------------------------------
 
 * BIDS Derivatives filenames (``desc-autohs`` entities)
 * JSON sidecars with pipeline provenance
-* ``sources`` / ``SpatialReference`` metadata where applicable
+* ``Sources`` / ``SpatialReference`` metadata where applicable
 
-Stage 3 — Feature completeness
-------------------------------
+Stage 3 — Feature completeness (current)
+------------------------------------------
 
-* Implement ``--bids-filter-file`` (PyBIDS filters JSON)
-* Implement ``--reports-only`` (re-run AI-compute from existing segmentation)
+* ``--bids-filter-file`` (PyBIDS filters JSON for T1w selection)
+* ``--reports-only`` (re-run AI-compute from existing segmentation in ``-w``)
 
 Stage 4 — Integration testing
 -------------------------------

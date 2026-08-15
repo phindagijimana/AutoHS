@@ -70,7 +70,7 @@ def build_parser() -> argparse.ArgumentParser:
     bids.add_argument(
         "--bids-filter-file",
         dest="bids_filter_file",
-        help="Optional PyBIDS filter file (JSON). Reserved for future use.",
+        help="PyBIDS filter file (JSON) to restrict T1w selection.",
     )
 
     perf = parser.add_argument_group("Options to handle performance")
@@ -108,7 +108,7 @@ def build_parser() -> argparse.ArgumentParser:
     workflow.add_argument(
         "--reports-only",
         action="store_true",
-        help="Reserved. Re-generate reports from existing derivatives (not yet implemented).",
+        help="Re-run AI-compute and reports from existing segmentation in the work directory.",
     )
     return parser
 
@@ -134,8 +134,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
-    if args.reports_only:
-        parser.error("--reports-only is reserved and not yet implemented.")
+    if args.reports_only and args.fastsurfer:
+        parser.error("--reports-only cannot be combined with --fastsurfer.")
 
     bids_dir = Path(args.bids_dir).resolve()
     output_dir = Path(args.output_dir).resolve()
@@ -156,10 +156,12 @@ def main(argv: list[str] | None = None) -> int:
         work_dir=work_dir,
         participant_labels=args.participant_label,
         session_labels=args.session_label,
+        bids_filter_file=Path(args.bids_filter_file) if args.bids_filter_file else None,
         fastsurfer=args.fastsurfer,
         fs_license_file=Path(args.fs_license_file) if args.fs_license_file else None,
         runtime=runtime,
         n_threads=args.n_threads,
+        reports_only=args.reports_only,
     )
 
     print(f"AutoHS completed {len(published)} scan(s).")

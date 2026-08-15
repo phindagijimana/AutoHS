@@ -48,7 +48,9 @@ Options for filtering BIDS queries
    Skip ``bids-validator`` (useful on air-gapped clusters).
 
 ``--bids-filter-file``
-   Reserved for future PyBIDS filter JSON support.
+   JSON file with PyBIDS filters for the ``t1w`` query (QSIPrep-style). Example::
+
+      { "t1w": { "session": "1", "run": "1" } }
 
 Options to handle performance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,7 +76,8 @@ Workflow configuration
    Path to FreeSurfer ``license.txt``. Not required with ``--fastsurfer``.
 
 ``--reports-only``
-   Reserved for re-generating reports from existing derivatives.
+   Skip segmentation and re-run AI-compute plus derivative publishing from an
+   existing ``-w`` work directory (requires prior full run for the same subject/session).
 
 Participant mode
 ----------------
