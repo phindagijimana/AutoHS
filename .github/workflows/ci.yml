@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          pip install -r workflow/requirements.txt
+          pip install -r requirements-bids.txt
+          pip install -r ai_compute/requirements.txt
+      - name: Validate pipeline
+        run: python -m workflow.validate
+      - name: Run tests
+        run: python -m unittest discover -s workflow/tests -p 'test_*.py' -v
+      - name: BIDS App CLI smoke test
+        run: python run.py --version

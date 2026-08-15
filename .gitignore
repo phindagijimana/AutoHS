@@ -1,6 +1,7 @@
 venv/
 logs/
 data/
+docs/_build/
 __pycache__/
 *.pyc
 .pytest_cache/

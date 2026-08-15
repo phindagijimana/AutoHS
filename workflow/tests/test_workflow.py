@@ -88,6 +88,38 @@ class AIComputeTests(unittest.TestCase):
         self.assertEqual(volumes["right"], 3200.0)
         path.unlink()
 
+    def test_find_aseg_dkt_stats(self) -> None:
+        from ai_compute.extract import find_aseg_stats
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            stats_dir = root / "job_test" / "stats"
+            stats_dir.mkdir(parents=True)
+            stats_file = stats_dir / "aseg+DKT.stats"
+            stats_file.write_text(
+                "1  17  100  3500.0  Left-Hippocampus\n2  53  90  3200.0  Right-Hippocampus\n",
+                encoding="utf-8",
+            )
+            found = find_aseg_stats(root, "job_test")
+            self.assertEqual(found, stats_file)
+
+
+class WorkflowRunnerTests(unittest.TestCase):
+    def test_submit_fastsurfer_flag(self) -> None:
+        import tempfile
+        from workflow.runner import WorkflowRunner
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "data").mkdir()
+            nii = root / "scan.nii.gz"
+            nii.write_bytes(b"")
+            runner = WorkflowRunner(root)
+            job_id = runner.submit(nii, fastsurfer=True)
+            job = runner.queue.get_job(job_id)
+            self.assertEqual(job.segmentation, "fastsurfer")
+
 
 if __name__ == "__main__":
     unittest.main()

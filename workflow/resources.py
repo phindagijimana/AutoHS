@@ -76,7 +76,9 @@ def assess_resources(
     running_jobs: int,
     max_running: int = 1,
     freesurfer_image: str = "freesurfer/freesurfer:7.4.1",
+    fastsurfer_image: str = "deepmi/fastsurfer:latest",
     ai_compute_image: str = "autohs/ai-compute:latest",
+    segmentation: str = "freesurfer",
 ) -> ResourceStatus:
     reasons: list[str] = []
     ok = True
@@ -87,13 +89,15 @@ def assess_resources(
 
     min_disk = float(os.getenv("AUTOHS_MIN_DISK_GB", "10"))
     min_mem = float(os.getenv("AUTOHS_MIN_MEMORY_GB", "8"))
-    for check in (
+    seg_image = fastsurfer_image if segmentation == "fastsurfer" else freesurfer_image
+    checks = [
         check_docker(),
         check_disk(data_dir, min_gb=min_disk),
         check_memory(min_gb=min_mem),
-        check_image(freesurfer_image),
+        check_image(seg_image),
         check_image(ai_compute_image),
-    ):
+    ]
+    for check in checks:
         passed, message = check
         reasons.append(message)
         if not passed:

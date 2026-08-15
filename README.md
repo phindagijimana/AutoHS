@@ -1,6 +1,13 @@
 # NeuroInsight-AutoHS
 
-**NeuroInsight-AutoHS** is a runnable application for automated hippocampal sclerosis (HS) analysis from T1-weighted MRI: hippocampal segmentation, volumetric extraction, asymmetry indexing, and clinical reporting.
+[![CI](https://github.com/phindagijimana/AutoHS/actions/workflows/ci.yml/badge.svg)](https://github.com/phindagijimana/AutoHS/actions/workflows/ci.yml)
+[![Documentation](https://readthedocs.org/projects/autohs/badge/?version=latest)](https://autohs.readthedocs.io/en/latest/?badge=latest)
+
+**NeuroInsight-AutoHS** is a runnable application for automated hippocampal sclerosis (HS) analysis from T1-weighted MRI: hippocampal segmentation, volumetric extraction, asymmetry indexing, and clinical reporting. It is also packaged as a [BIDS App](https://bids.neuroimaging.io/bids_apps.html) (**AutoHS**).
+
+📖 **Documentation:** [autohs.readthedocs.io](https://autohs.readthedocs.io)
+
+🐳 **Docker:** `docker pull autohs/autohs:latest` (after release; see [Maintainers](docs/source/maintainers.rst))
 
 It implements the **[AutoHS pipeline](https://github.com/phindagijimana/AutoHS)** — a structured, machine-readable two-step workflow maintained in the [AutoHS repository](https://github.com/phindagijimana/AutoHS) on GitHub. The pipeline specification lives in `workflow/pipeline.yaml`; this repo provides the CLI, Docker runner, and AI-compute reporting container that execute that workflow.
 
@@ -17,6 +24,32 @@ NeuroInsight-AutoHS runs the AutoHS pipeline as two Docker steps when resources 
 |------|------|-----------|--------------|
 | **1** | FreeSurfer processing | `freesurfer/freesurfer:7.4.1` | `recon-all` + `mri_segstats` → `aseg.stats` |
 | **2** | AI-compute | `autohs/ai-compute:latest` | Extract volumes, asymmetry index, overlays, PDF report |
+
+## BIDS App
+
+NeuroInsight-AutoHS follows the [BIDS Apps](https://bids.neuroimaging.io/bids_apps.html) specification as **AutoHS**.
+
+```bash
+# Install BIDS dependencies
+pip install -r requirements-bids.txt
+
+# Run on a BIDS dataset (Apptainer/HPC example)
+python run.py /path/to/bids /path/to/output participant \
+  --participant-label 001 \
+  --fastsurfer \
+  --runtime apptainer
+
+# Docker
+docker build -f docker/Dockerfile.bidsapp -t autohs/autohs:latest .
+docker run --rm -v /data/bids:/data:ro -v /data/out:/out autohs/autohs:latest \
+  /data /out participant --participant-label 001 --fastsurfer
+```
+
+Outputs: `output/autohs/sub-*/` with `report.json`, `report.pdf`, `summary.txt`.
+
+Full documentation: [docs/source/index.rst](docs/source/index.rst) (Sphinx / Read the Docs layout, QSIPrep-style).
+
+See also the legacy `./AutoHS` CLI for single-file job queue workflows.
 
 ## What this repo contains
 
@@ -163,6 +196,7 @@ python -m unittest workflow.tests.test_workflow -v
 
 ## Documentation
 
+- **[autohs.readthedocs.io](https://autohs.readthedocs.io)** — NeuroInsight-AutoHS / AutoHS BIDS App documentation
 - **[workflow/README.md](workflow/README.md)** — AutoHS pipeline reference, progress ranges, FreeSurfer sub-steps
 - **[workflow/pipeline.yaml](workflow/pipeline.yaml)** — master pipeline definition with execution order and job state machine
 - **[workflow/diagrams/](workflow/diagrams/)** — Mermaid flowcharts

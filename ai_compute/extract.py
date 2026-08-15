@@ -30,11 +30,14 @@ def parse_aseg_stats(stats_file: Path) -> dict[str, float]:
 def find_aseg_stats(freesurfer_dir: Path, subject_id: str) -> Optional[Path]:
     candidates = [
         freesurfer_dir / subject_id / "stats" / "aseg.stats",
+        freesurfer_dir / subject_id / "stats" / "aseg+DKT.stats",
         freesurfer_dir / f"freesurfer_docker_{subject_id}" / "stats" / "aseg.stats",
+        freesurfer_dir / f"freesurfer_docker_{subject_id}" / "stats" / "aseg+DKT.stats",
         freesurfer_dir / subject_id / "mri" / "stats" / "aseg.stats",
     ]
-    for path in freesurfer_dir.rglob("aseg.stats"):
-        candidates.append(path)
+    for pattern in ("aseg.stats", "aseg+DKT.stats"):
+        for path in freesurfer_dir.rglob(pattern):
+            candidates.append(path)
 
     seen: set[Path] = set()
     for candidate in candidates:
