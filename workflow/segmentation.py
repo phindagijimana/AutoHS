@@ -23,13 +23,16 @@ def _native_python(repo_root: Path) -> str:
     venv_python = repo_root / "venv" / "bin" / "python"
     if venv_python.exists():
         return str(venv_python)
-    for name in ("python", "python3"):
-        exe = shutil.which(name)
-        if exe:
-            return exe
     import sys
 
     return sys.executable
+
+
+def _run_cmd(cmd: list[str], label: str, env: dict[str, str] | None = None) -> None:
+    result = subprocess.run(cmd, capture_output=True, text=True, check=False, env=env)
+    if result.returncode != 0:
+        tail = (result.stderr or result.stdout or "")[-2000:]
+        raise RuntimeError(f"{label} failed (exit {result.returncode}): {tail}")
 
 
 def detect_runtime(preferred: str | None = None) -> str:
@@ -54,13 +57,6 @@ def detect_runtime(preferred: str | None = None) -> str:
     if shutil.which("apptainer") or shutil.which("singularity"):
         return "apptainer"
     raise RuntimeError("Neither Docker nor Apptainer/Singularity is available")
-
-
-def _run_cmd(cmd: list[str], label: str) -> None:
-    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
-    if result.returncode != 0:
-        tail = (result.stderr or result.stdout or "")[-2000:]
-        raise RuntimeError(f"{label} failed (exit {result.returncode}): {tail}")
 
 
 def run_freesurfer(
@@ -310,7 +306,7 @@ def run_ai_compute(
             "--subject-id",
             subject_id,
         ]
-        _run_cmd(cmd, "AI-compute (native)")
+        _run_cmd(cmd, "AI-compute (native)", env=env)
 
     result_file = output_dir / "ai_compute_result.json"
     if not result_file.exists():

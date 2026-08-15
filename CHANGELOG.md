@@ -5,6 +5,12 @@ All notable changes to AutoHS are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-08-15
+
+### Fixed
+
+- Pass ``PYTHONPATH`` to the native AI-compute subprocess so CI can import ``ai_compute``
+
 ## [0.1.2] - 2026-08-15
 
 ### Fixed
@@ -37,6 +43,7 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Minimal BIDS integration test fixture and end-to-end CI smoke tests
 - `CITATION.cff` for software and publication metadata
 
+[0.1.3]: https://github.com/phindagijimana/AutoHS/releases/tag/v0.1.3
 [0.1.2]: https://github.com/phindagijimana/AutoHS/releases/tag/v0.1.2
 [0.1.1]: https://github.com/phindagijimana/AutoHS/releases/tag/v0.1.1
 [0.1.0]: https://github.com/phindagijimana/AutoHS/releases/tag/v0.1.0

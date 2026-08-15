@@ -3,6 +3,11 @@ Changes
 
 Release history for AutoHS. See also ``CHANGELOG.md`` in the repository root.
 
+0.1.3 (2026-08-15)
+------------------
+
+* Pass ``PYTHONPATH`` to native AI-compute subprocess (fixes CI integration tests)
+
 0.1.2 (2026-08-15)
 ------------------
 
