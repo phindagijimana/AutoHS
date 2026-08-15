@@ -54,15 +54,47 @@ Logs are written to `logs/autohs.log`.
 
 **18 top-level steps**, including a nested **17-step FreeSurfer sub-pipeline** (motion correction through `mri_segstats`).
 
-### Asymmetry index
+## Hippocampal asymmetry index
 
-Hippocampal asymmetry is computed as:
+AutoHS implements the MRI-derived hippocampal asymmetry index used to identify hippocampal sclerosis in epilepsy surgical specimens (see [Citation](#citation) below).
+
+FreeSurfer subcortical segmentation yields left and right hippocampal volumes (**L**, **R**) in mm³. The asymmetry index (**AI**) is:
 
 ```
 AI = (L − R) / (L + R)
 ```
 
-where L and R are left and right hippocampal volumes (mm³).
+| Symbol | Meaning |
+|--------|---------|
+| **L** | Left hippocampal volume (mm³) |
+| **R** | Right hippocampal volume (mm³) |
+| **AI** | Asymmetry index (dimensionless; typically −1 to +1) |
+
+**Interpretation:**
+
+- **AI > 0** — left hippocampus larger than right  
+- **AI < 0** — right hippocampus larger than left  
+- **AI ≈ 0** — symmetric volumes  
+
+This metric is computed in workflow step `calculate-asymmetry` and is central to the AutoHS screening workflow described in the associated publication.
+
+## Citation
+
+If you use this workflow or the asymmetry index in research, please cite:
+
+> **Ndagijimana P**, **Brennan D**, **Shinohara R**, **Gugger J**. MRI derived hippocampal asymmetry identifies hippocampal sclerosis in epilepsy surgical specimens. *Brain Communications*. **Accepted (in press)**.
+
+**BibTeX:**
+
+```bibtex
+@article{ndagijimana2026mri,
+  title   = {MRI derived hippocampal asymmetry identifies hippocampal sclerosis in epilepsy surgical specimens},
+  author  = {Ndagijimana, Philbert and Brennan, Daniel and Shinohara, Russell and Gugger, James},
+  journal = {Brain Communications},
+  year    = {2026},
+  note    = {Accepted (in press)}
+}
+```
 
 ## Quick start
 

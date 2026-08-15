@@ -1,8 +1,14 @@
 # AutoHS — Automated Hippocampal Sclerosis Workflow
 
-This repository defines the **NeuroInsight** analysis pipeline as a structured, multi-step workflow. It documents how T1-weighted MRI scans flow from upload through FreeSurfer segmentation to asymmetry metrics and clinical review.
+This repository defines the **NeuroInsight / AutoHS** analysis pipeline as a structured, multi-step workflow. It documents how T1-weighted MRI scans flow from upload through FreeSurfer segmentation to asymmetry metrics and clinical review.
 
 Each step maps to modules in the [NeuroInsight](https://github.com/phindagijimana/neuroinsight_local) application. Code references in step files point to that repo when run standalone here.
+
+## Publication
+
+> Ndagijimana P, Brennan D, Shinohara R, Gugger J. **MRI derived hippocampal asymmetry identifies hippocampal sclerosis in epilepsy surgical specimens.** *Brain Communications*. Accepted (in press).
+
+**Asymmetry index:** `AI = (L − R) / (L + R)` where L and R are left and right hippocampal volumes (mm³).
 
 ## Structure
 
