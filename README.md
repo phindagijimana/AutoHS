@@ -8,6 +8,8 @@ AutoHS documents the end-to-end workflow used by [NeuroInsight](https://github.c
 
 ```
 AutoHS/
+├── AutoHS                  # Workflow CLI (install, start, logs, stop)
+├── README.md
 └── workflow/               # Pipeline definitions, loader, tests
     ├── README.md           # Detailed workflow documentation
     ├── pipeline.yaml       # Master pipeline (5 phases, 18 steps)
@@ -15,6 +17,30 @@ AutoHS/
     ├── load_pipeline.py    # Python loader + validator
     └── validate.py         # CLI validation tool
 ```
+
+## CLI
+
+AutoHS includes a command-line tool for installing dependencies, validating the pipeline, and viewing logs:
+
+```bash
+chmod +x ./AutoHS
+
+./AutoHS install    # Create venv, install deps, validate pipeline
+./AutoHS start      # Validate workflow and run tests
+./AutoHS logs       # Show recent log output
+./AutoHS stop       # Stop background process (if any)
+./AutoHS status     # Show install and validation status
+```
+
+| Command | Description |
+|---------|-------------|
+| `install` | Create `venv/`, install `workflow/requirements.txt`, run initial validation |
+| `start` | Validate pipeline + run unit tests; output appended to `logs/autohs.log` |
+| `logs` | Tail last 80 lines of `logs/autohs.log` (use `logs -f` to follow) |
+| `stop` | Stop background watch process if running |
+| `status` | Print environment info and run validation |
+
+Logs are written to `logs/autohs.log`.
 
 ## Pipeline overview
 
@@ -44,12 +70,17 @@ where L and R are left and right hippocampal volumes (mm³).
 git clone https://github.com/phindagijimana/AutoHS.git
 cd AutoHS
 
+chmod +x ./AutoHS
+./AutoHS install
+./AutoHS start
+./AutoHS logs
+```
+
+Or manually:
+
+```bash
 pip install -r workflow/requirements.txt
-
-# Validate pipeline structure
 python -m workflow.validate
-
-# Run tests
 python -m unittest workflow.tests.test_workflow -v
 ```
 

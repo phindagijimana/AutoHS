@@ -62,6 +62,7 @@ Queue limits: **1 running** + **5 pending** jobs maximum.
 
 ## Using these definitions
 
+- **CLI:** Run `./AutoHS install`, `./AutoHS start`, `./AutoHS logs` from the repo root (see root README)
 - **Onboarding:** Read `pipeline.yaml`, then drill into `steps/` for each step's inputs, outputs, and code references.
 - **Debugging:** Match a stuck job's `current_step` / `progress` field to the step's `progress_range` in the step file.
 - **Validation:** Run `python -m workflow.validate` from the repo root
