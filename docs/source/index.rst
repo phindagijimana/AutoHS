@@ -25,7 +25,9 @@ web application that implements the AutoHS pipeline (dashboard, API, deployment)
    outputs
    preprocessing
    citation
+   changes
    roadmap
+   bids_apps_hub
    maintainers
 
 Indices and tables

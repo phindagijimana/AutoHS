@@ -1,0 +1,54 @@
+cff-version: 1.2.0
+title: AutoHS
+message: >-
+  If you use AutoHS, please cite both the software record below and the
+  hippocampal asymmetry publication.
+type: software
+authors:
+  - given-names: Philbert
+    family-names: Ndagijimana
+  - given-names: Daniel
+    family-names: Brennan
+  - given-names: Russell
+    family-names: Shinohara
+  - given-names: James
+    family-names: Gugger
+identifiers:
+  - type: url
+    value: https://github.com/phindagijimana/AutoHS
+  - type: doi
+    value: 10.5281/zenodo.TBD
+repository-code: https://github.com/phindagijimana/AutoHS
+url: https://autohs.readthedocs.io
+abstract: >-
+  AutoHS is a BIDS App for automated hippocampal sclerosis screening from
+  T1-weighted MRI. It performs hippocampal segmentation (FreeSurfer or
+  FastSurfer), computes hippocampal volumes and the asymmetry index, and
+  generates clinical reports.
+keywords:
+  - BIDS App
+  - hippocampal sclerosis
+  - epilepsy
+  - FreeSurfer
+  - FastSurfer
+  - neuroimaging
+license: MIT
+version: 0.1.0
+date-released: 2026-08-15
+preferred-citation:
+  type: article
+  title: >-
+    MRI derived hippocampal asymmetry identifies hippocampal sclerosis in
+    epilepsy surgical specimens
+  authors:
+    - given-names: Philbert
+      family-names: Ndagijimana
+    - given-names: Daniel
+      family-names: Brennan
+    - given-names: Russell
+      family-names: Shinohara
+    - given-names: James
+      family-names: Gugger
+  journal: Brain Communications
+  year: 2026
+  notes: Accepted (in press)

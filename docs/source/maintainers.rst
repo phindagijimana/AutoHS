@@ -7,12 +7,13 @@ by apps such as QSIPrep.
 Release checklist
 -----------------
 
-1. Bump ``version`` in the repository root.
-2. Update ``docs/source/changes.rst`` (create on first release).
+1. Bump ``version`` in the repository root and ``CITATION.cff`` ``version`` / ``date-released``.
+2. Update ``CHANGELOG.md`` and ``docs/source/changes.rst``.
 3. Merge to ``main``.
 4. Tag and push: ``git tag v0.1.0 && git push origin v0.1.0``
-5. Confirm GitHub Actions: **CI**, **Documentation**, **Publish Docker Image**.
+5. Confirm GitHub Actions: **CI**, **Documentation**, **Publish Docker Image**, **Release Apptainer Image**.
 6. Confirm Read the Docs build for ``main`` / the tag.
+7. Optional: PR to `bids-standard/bids-website` using ``registry/bids-website-apps.yml`` (see :doc:`bids_apps_hub`).
 
 Read the Docs
 -------------
@@ -56,7 +57,14 @@ Apptainer on HPC:
 
    apptainer build autohs.sif docker://autohs/autohs:latest
 
-Roadmap to QSIPrep-level maturity
------------------------------------
+Or download ``autohs_<version>.sif`` from `GitHub Releases <https://github.com/phindagijimana/AutoHS/releases>`_.
+
+BIDS Apps hub
+-------------
+
+See :doc:`bids_apps_hub` for listing AutoHS on the BIDS website and optional ``bids-apps`` org onboarding.
+
+Roadmap
+-------
 
 See :doc:`roadmap` for the full staged plan.

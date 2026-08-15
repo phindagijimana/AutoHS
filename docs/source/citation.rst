@@ -38,3 +38,9 @@ Related software
 * `NeuroInsight-AutoHS <https://github.com/phindagijimana/neuroinsight_local>`_ — full web
   application that implements the AutoHS pipeline
 * `QSIPrep <https://qsiprep.readthedocs.io/>`_ — BIDS App reference for documentation layout
+
+Software citation file
+----------------------
+
+The repository includes ``CITATION.cff`` for automated citation metadata (Zenodo, GitHub,
+and reference managers). Update the ``version`` field when tagging releases.

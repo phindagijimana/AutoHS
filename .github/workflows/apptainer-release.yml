@@ -1,0 +1,52 @@
+name: Release Apptainer Image
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Version tag without v prefix (e.g. 0.1.0)"
+        required: true
+        default: "0.1.0"
+
+permissions:
+  contents: write
+
+jobs:
+  apptainer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve tag
+        id: meta
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "tag=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Apptainer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apptainer
+
+      - name: Build Docker image
+        run: |
+          docker build -f docker/Dockerfile.bidsapp -t autohs/autohs:${{ steps.meta.outputs.tag }} .
+
+      - name: Build Apptainer SIF
+        run: |
+          apptainer build autohs_${{ steps.meta.outputs.tag }}.sif \
+            docker-daemon://autohs/autohs:${{ steps.meta.outputs.tag }}
+
+      - name: Upload GitHub release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.meta.outputs.tag }}
+          name: AutoHS v${{ steps.meta.outputs.tag }}
+          files: autohs_${{ steps.meta.outputs.tag }}.sif
+          generate_release_notes: true

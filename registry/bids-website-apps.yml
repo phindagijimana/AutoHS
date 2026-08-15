@@ -1,0 +1,18 @@
+# Snippet for maintainers: open a PR to bids-standard/bids-website
+# data/tools/apps.yml with an entry like the following.
+#
+# See docs/source/bids_apps_hub.rst for the full registration checklist.
+
+- gh: phindagijimana/AutoHS
+  dh: autohs/autohs
+  description: >-
+    Automated hippocampal sclerosis workflow from T1w MRI: segmentation,
+    hippocampal volumes, asymmetry index, and clinical reports.
+  status: active
+  ds_type:
+    - raw
+  datatype:
+    - anat
+  ci: gh
+  branch: main
+  workflow: CI

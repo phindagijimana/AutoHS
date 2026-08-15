@@ -144,6 +144,8 @@ If you use AutoHS or the asymmetry index in research, please cite:
 
 > **Ndagijimana P**, **Brennan D**, **Shinohara R**, **Gugger J**. MRI derived hippocampal asymmetry identifies hippocampal sclerosis in epilepsy surgical specimens. *Brain Communications*. **Accepted (in press)**.
 
+See [`CITATION.cff`](CITATION.cff) for machine-readable metadata. Release notes: [`CHANGELOG.md`](CHANGELOG.md).
+
 **BibTeX:**
 
 ```bibtex
