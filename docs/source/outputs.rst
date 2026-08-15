@@ -16,32 +16,30 @@ Directory layout
        ├── autohs_run.json            # run summary
        └── sub-<label>/
            └── ses-<label>/           # omitted when no session
-               ├── report.json
-               ├── report.pdf
-               ├── summary.txt
-               ├── ai_compute_result.json
-               └── visualizations/
-                   └── coronal/
-                       └── slice_*.png
+               ├── sub-<label>_ses-<label>_desc-autohs_metrics.json
+               ├── sub-<label>_ses-<label>_desc-autohs_summary.txt
+               ├── sub-<label>_ses-<label>_desc-autohs_provenance.json
+               ├── report.json        # legacy alias of metrics JSON
+               └── figures/
+                   ├── sub-<label>_ses-<label>_desc-autohs_report.pdf
+                   └── sub-<label>_ses-<label>_desc-autohs_hippocampus-coronal*.png
 
 Participant reports
 ---------------------
 
-``report.json``
-   Machine-readable metrics: left/right hippocampal volumes (mm³), asymmetry index,
-   volume laterality, and HS classification with publication thresholds.
+``*_desc-autohs_metrics.json``
+   BIDS-style metrics file with ``Sources``, ``SpatialReference``, and
+   ``GeneratedBy`` metadata plus hippocampal volumes, asymmetry index, and HS
+   classification.
 
-``summary.txt``
+``*_desc-autohs_summary.txt``
    Human-readable one-page summary suitable for clinical review.
 
-``report.pdf``
+``figures/*_desc-autohs_report.pdf``
    Formatted PDF report with metrics and interpretation.
 
-Visual reports
---------------
-
-When nibabel and matplotlib are available, coronal overlay PNGs are saved under
-``visualizations/coronal/`` showing hippocampal labels (FreeSurfer labels 17 and 53).
+``*_desc-autohs_provenance.json``
+   AI-compute provenance sidecar with pipeline outputs and source T1w URI.
 
 Quality control
 ---------------

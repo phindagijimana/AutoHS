@@ -4,24 +4,17 @@ from __future__ import annotations
 
 import json
 import shutil
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Optional
 
+from workflow.bids_types import T1wScan
 from workflow.segmentation import run_ai_compute, run_fastsurfer, run_freesurfer
 
 try:
     from bids import BIDSLayout
 except ImportError:
     BIDSLayout = None  # type: ignore
-
-
-@dataclass
-class T1wScan:
-    subject_label: str
-    session_label: Optional[str]
-    t1w_path: Path
 
 
 def discover_t1w_scans(
@@ -114,24 +107,34 @@ def derivative_subject_dir(
     output_root: Path,
     scan: T1wScan,
 ) -> Path:
-    subject = f"sub-{scan.subject_label}"
-    if scan.session_label:
-        return output_root / subject / f"ses-{scan.session_label}"
-    return output_root / subject
+    from workflow.derivatives import derivative_paths
+
+    return derivative_paths(output_root, scan).subject_dir
 
 
-def publish_derivatives(work_output: Path, derivative_dir: Path) -> None:
-    derivative_dir.mkdir(parents=True, exist_ok=True)
-    for name in ("report.json", "report.pdf", "summary.txt", "ai_compute_result.json"):
-        src = work_output / name
-        if src.exists():
-            shutil.copy2(src, derivative_dir / name)
-    viz_src = work_output / "visualizations"
-    if viz_src.exists():
-        viz_dst = derivative_dir / "visualizations"
-        if viz_dst.exists():
-            shutil.rmtree(viz_dst)
-        shutil.copytree(viz_src, viz_dst)
+def publish_derivatives(
+    work_output: Path,
+    output_root: Path,
+    *,
+    scan: T1wScan,
+    bids_dir: Path,
+    pipeline: str = "freesurfer",
+    version: Optional[str] = None,
+) -> Path:
+    from workflow.derivatives import derivative_paths, publish_bids_derivatives
+
+    if version is None:
+        version = open(Path(__file__).resolve().parents[1] / "version").read().strip()
+    paths = derivative_paths(output_root, scan)
+    publish_bids_derivatives(
+        work_output,
+        paths,
+        scan=scan,
+        bids_dir=bids_dir,
+        pipeline=pipeline,
+        version=version,
+    )
+    return paths.subject_dir
 
 
 class BidsRunner:
@@ -222,8 +225,13 @@ class BidsRunner:
                 runtime=runtime,
             )
 
-            derivative_dir = derivative_subject_dir(output_root, scan)
-            publish_derivatives(work_output, derivative_dir)
+            derivative_dir = publish_derivatives(
+                work_output,
+                output_root,
+                scan=scan,
+                bids_dir=bids_dir,
+                pipeline="fastsurfer" if fastsurfer else "freesurfer",
+            )
             published.append(derivative_dir)
 
         log = {

@@ -4,17 +4,17 @@ Roadmap
 AutoHS is being brought to the same **production bar** as mature BIDS Apps such as
 QSIPrep. Work proceeds in ordered stages.
 
-Stage 1 — Publish (current)
----------------------------
+Stage 1 — Publish
+-----------------
 
 * Read the Docs configuration (``.readthedocs.yaml``)
 * Docker Hub image ``autohs/autohs`` via GitHub Actions
 * CI: tests + documentation build on every PR
 
-**Your action:** connect Read the Docs + add Docker Hub secrets (see :doc:`maintainers`).
+Connect Read the Docs and Docker Hub secrets (see :doc:`maintainers`).
 
-Stage 2 — BIDS derivatives compliance
--------------------------------------
+Stage 2 — BIDS derivatives compliance (current)
+-----------------------------------------------
 
 * BIDS Derivatives filenames (``desc-autohs`` entities)
 * JSON sidecars with pipeline provenance
