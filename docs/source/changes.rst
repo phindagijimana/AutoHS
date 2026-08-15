@@ -3,6 +3,14 @@ Changes
 
 Release history for AutoHS. See also ``CHANGELOG.md`` in the repository root.
 
+0.1.2 (2026-08-15)
+------------------
+
+CI and release workflow fixes.
+
+* Native AI-compute uses the active ``python`` interpreter in GitHub Actions
+* Apptainer release workflow installs from the official PPA
+
 0.1.1 (2026-08-15)
 ------------------
 

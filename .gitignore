@@ -1,4 +1,5 @@
 venv/
+.ci-venv/
 logs/
 data/
 docs/_build/

@@ -19,6 +19,19 @@ FASTSURFER_SIF = os.getenv(
 )
 
 
+def _native_python(repo_root: Path) -> str:
+    venv_python = repo_root / "venv" / "bin" / "python"
+    if venv_python.exists():
+        return str(venv_python)
+    for name in ("python", "python3"):
+        exe = shutil.which(name)
+        if exe:
+            return exe
+    import sys
+
+    return sys.executable
+
+
 def detect_runtime(preferred: str | None = None) -> str:
     if preferred in {"docker", "apptainer"}:
         return preferred
@@ -283,9 +296,7 @@ def run_ai_compute(
         env = os.environ.copy()
         env["PYTHONPATH"] = str(repo_root.resolve())
         cmd = [
-            str(repo_root / "venv" / "bin" / "python")
-            if (repo_root / "venv" / "bin" / "python").exists()
-            else shutil.which("python3") or "python3",
+            _native_python(repo_root),
             "-m",
             "ai_compute.main",
             "--job-id",
