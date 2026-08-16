@@ -72,18 +72,4 @@ Download two public IDEAS subjects (OpenNeuro ``ds005602``), then run AutoHS:
 See :doc:`sample_data` and :doc:`citation` for required IDEAS, FreeSurfer, and FastSurfer
 citations.
 
-Using CIDUR BIDS data
----------------------
-
-.. code-block:: bash
-
-   python run.py \
-     ~/Documents/CIDUR_BIDS/data_bids \
-     ~/Documents/AutoHS/bids_output \
-     participant \
-     --participant-label 001 \
-     --fastsurfer \
-     --runtime apptainer \
-     -w ~/Documents/AutoHS/bids_output/work
-
-Outputs appear under ``bids_output/autohs/sub-001/``.
+Outputs appear under ``bids_output/autohs/sub-*/``.

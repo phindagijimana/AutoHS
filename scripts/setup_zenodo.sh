@@ -4,7 +4,7 @@
 # Steps (one-time, in browser):
 #   1. https://zenodo.org/account/settings/github/
 #   2. Enable GitHub integration and toggle ON for phindagijimana/AutoHS
-#   3. Create or refresh GitHub release v0.1.8 (archive is created automatically)
+#   3. Create or refresh GitHub release v0.1.9 (archive is created automatically)
 #   4. Copy the new Zenodo DOI into CITATION.cff identifiers section
 #
 # This script checks whether a Zenodo badge/DOI exists on the latest release.
@@ -12,7 +12,7 @@
 set -euo pipefail
 
 REPO="${1:-phindagijimana/AutoHS}"
-TAG="${2:-v0.1.8}"
+TAG="${2:-v0.1.9}"
 
 echo "Zenodo setup checklist for $REPO $TAG"
 echo "========================================"

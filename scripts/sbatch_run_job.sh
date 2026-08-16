@@ -6,11 +6,10 @@
 #SBATCH --mem=64G
 #SBATCH --time=24:00:00
 #SBATCH --partition=general
-#SBATCH --chdir=/mnt/nfs/home/urmc-sh.rochester.edu/pndagiji/Documents/AutoHS
 
 set -euo pipefail
 
-ROOT="/mnt/nfs/home/urmc-sh.rochester.edu/pndagiji/Documents/AutoHS"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 mkdir -p logs
 
@@ -35,7 +34,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$JOB_ID" ]]; then
-  echo "Usage: sbatch scripts/sbatch_run_job.sh <job_id> [--fastsurfer]" >&2
+  echo "Usage: sbatch --chdir=\$AUTOHS_ROOT scripts/sbatch_run_job.sh <job_id> [--fastsurfer]" >&2
   exit 1
 fi
 

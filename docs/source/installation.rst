@@ -53,6 +53,9 @@ Set segmentation SIF paths when running outside the bundled Docker stack:
    export FASTSURFER_SIF=/path/to/fastsurfer_latest.sif
    export AUTOHS_RUNTIME=apptainer
 
+These variables are **required** for Apptainer runs (no site-specific defaults are shipped
+in the repository).
+
 Python / Source Install
 -----------------------
 

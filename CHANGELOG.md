@@ -5,6 +5,18 @@ All notable changes to AutoHS are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.9] - 2026-08-16
+
+### Changed
+
+- Remove site-specific HPC paths from code and Slurm scripts; require ``FREESURFER_SIF`` /
+  ``FASTSURFER_SIF`` environment variables for Apptainer
+- Drop internal cohort references from public quickstart docs
+
+### Added
+
+- Documentation page on privacy and public sample data policy
+
 ## [0.1.8] - 2026-08-16
 
 ### Added

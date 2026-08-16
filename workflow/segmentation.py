@@ -10,14 +10,20 @@ from pathlib import Path
 
 FREESURFER_IMAGE = os.getenv("FREESURFER_IMAGE", "freesurfer/freesurfer:7.4.1")
 FASTSURFER_IMAGE = os.getenv("FASTSURFER_IMAGE", "deepmi/fastsurfer:latest")
-FREESURFER_SIF = os.getenv(
-    "FREESURFER_SIF",
-    "/mnt/nfs/home/urmc-sh.rochester.edu/pndagiji/Documents/others/containers/freesurfer_7.4.1.sif",
-)
-FASTSURFER_SIF = os.getenv(
-    "FASTSURFER_SIF",
-    "/mnt/nfs/home/urmc-sh.rochester.edu/pndagiji/Documents/others/containers/fastsurfer_latest.sif",
-)
+FREESURFER_SIF = os.getenv("FREESURFER_SIF", "")
+FASTSURFER_SIF = os.getenv("FASTSURFER_SIF", "")
+
+
+def _resolve_sif(env_name: str, path: str) -> Path:
+    if not path:
+        raise FileNotFoundError(
+            f"{env_name} is not set. Export {env_name}=/path/to/container.sif "
+            "before running with Apptainer."
+        )
+    sif = Path(path)
+    if not sif.exists():
+        raise FileNotFoundError(f"{env_name} not found: {sif}")
+    return sif
 
 
 def _run_cmd(cmd: list[str], label: str, env: dict[str, str] | None = None) -> None:
@@ -105,9 +111,7 @@ def run_freesurfer(
         ]
         _run_cmd(cmd, "FreeSurfer (Docker)")
     else:
-        sif = Path(FREESURFER_SIF)
-        if not sif.exists():
-            raise FileNotFoundError(f"FreeSurfer SIF not found: {sif}")
+        sif = _resolve_sif("FREESURFER_SIF", FREESURFER_SIF)
         apptainer = "apptainer" if shutil.which("apptainer") else "singularity"
         cmd = [
             apptainer,
@@ -195,9 +199,7 @@ def run_fastsurfer(
         ]
         _run_cmd(cmd, "FastSurfer (Docker)")
     else:
-        sif = Path(FASTSURFER_SIF)
-        if not sif.exists():
-            raise FileNotFoundError(f"FastSurfer SIF not found: {sif}")
+        sif = _resolve_sif("FASTSURFER_SIF", FASTSURFER_SIF)
         apptainer = "apptainer" if shutil.which("apptainer") else "singularity"
         cmd = [
             apptainer,

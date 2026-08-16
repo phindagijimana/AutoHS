@@ -9,6 +9,7 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .DS_Store
+work/
 license.txt
 sample_data/ideas_bids/**/*.nii.gz
 sample_data/ideas_bids/README

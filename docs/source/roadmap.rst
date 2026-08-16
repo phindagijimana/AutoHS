@@ -2,7 +2,7 @@ Roadmap
 =======
 
 AutoHS targets the same **production bar** as mature BIDS Apps such as QSIPrep.
-Status as of **v0.1.8**:
+Status as of **v0.1.9**:
 
 Stage 1 — Publish
 -----------------
@@ -40,7 +40,7 @@ Stage 5 — Ecosystem
 * ``CITATION.cff`` and ``CHANGELOG.md`` — **done**
 * Apptainer ``.sif`` on GitHub Releases — **done**
 * IDEAS sample dataset + citations — **done**
-* BIDS website PR — **submitted** (see :doc:`bids_apps_hub`)
+* BIDS website PR — **submitted, checks passing** (see :doc:`bids_apps_hub`)
 * Zenodo DOI — **pending** first GitHub release with Zenodo integration
 
 Documentation depth (QSIPrep parity)

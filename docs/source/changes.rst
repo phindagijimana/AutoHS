@@ -3,6 +3,12 @@ Changes
 
 Release history for AutoHS. See also ``CHANGELOG.md`` in the repository root.
 
+0.1.9 (2026-08-16)
+------------------
+
+* Sanitize public docs/scripts (no site-specific paths or internal cohort examples)
+* Add privacy and public data policy page
+
 0.1.8 (2026-08-16)
 ------------------
 

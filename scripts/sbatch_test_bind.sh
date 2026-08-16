@@ -6,18 +6,23 @@
 #SBATCH --mem=8G
 #SBATCH --time=00:15:00
 #SBATCH --partition=general
-#SBATCH --chdir=/mnt/nfs/home/urmc-sh.rochester.edu/pndagiji/Documents/AutoHS
 
 set -euo pipefail
 set -x
 
-ROOT=/mnt/nfs/home/urmc-sh.rochester.edu/pndagiji/Documents/AutoHS
-JOB_ID=85f5179e
-FREESURFER_DIR=$ROOT/data/jobs/$JOB_ID/freesurfer
-INPUT_DIR=$ROOT/data/jobs/$JOB_ID/input
-LICENSE=$ROOT/license.txt
-SIF=/mnt/nfs/home/urmc-sh.rochester.edu/pndagiji/Documents/others/containers/freesurfer_7.4.1.sif
-SUBJECT_ID=job_${JOB_ID}
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+mkdir -p logs
+
+: "${FREESURFER_SIF:?Set FREESURFER_SIF to your FreeSurfer Apptainer image (.sif)}"
+: "${AUTOHS_BINDTEST_INPUT:?Set AUTOHS_BINDTEST_INPUT to a test T1w NIfTI path}"
+: "${AUTOHS_BINDTEST_SUBJECT_ID:=bindtest}"
+
+FREESURFER_DIR="$ROOT/work/bindtest/freesurfer"
+INPUT_DIR="$(dirname "$AUTOHS_BINDTEST_INPUT")"
+LICENSE="${FREESURFER_LICENSE:-$ROOT/license.txt}"
+SUBJECT_ID="$AUTOHS_BINDTEST_SUBJECT_ID"
+INPUT_NAME="$(basename "$AUTOHS_BINDTEST_INPUT")"
 
 rm -rf "$FREESURFER_DIR/$SUBJECT_ID"
 mkdir -p "$FREESURFER_DIR"
@@ -28,8 +33,8 @@ apptainer exec \
   --bind "${LICENSE}:/usr/local/freesurfer/license.txt:ro" \
   --env "FS_LICENSE=/usr/local/freesurfer/license.txt" \
   --env "SUBJECTS_DIR=/subjects" \
-  "$SIF" \
-  /bin/bash -c 'export FS_FREESURFERENV_NO_OUTPUT=1; source /usr/local/freesurfer/FreeSurferEnv.sh; recon-all -i /input/sub-001_ses-1_T1w.nii.gz -s job_85f5179e -autorecon1 -autorecon2-volonly' 2>&1 | head -40
+  "$FREESURFER_SIF" \
+  /bin/bash -c "export FS_FREESURFERENV_NO_OUTPUT=1; source /usr/local/freesurfer/FreeSurferEnv.sh; recon-all -i /input/${INPUT_NAME} -s ${SUBJECT_ID} -autorecon1 -autorecon2-volonly" 2>&1 | head -40
 
 echo "bind test exit=$?"
 ls -la "$FREESURFER_DIR/$SUBJECT_ID/scripts/" 2>/dev/null | head -5

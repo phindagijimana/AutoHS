@@ -37,8 +37,8 @@ FREESURFER_DIR="$WORK_DIR/freesurfer"
 OUTPUT_DIR="$WORK_DIR/output"
 SUBJECT_ID="job_${JOB_ID}"
 LICENSE="$ROOT/license.txt"
-FREESURFER_SIF="${FREESURFER_SIF:-/mnt/nfs/home/urmc-sh.rochester.edu/pndagiji/Documents/others/containers/freesurfer_7.4.1.sif}"
-FASTSURFER_SIF="${FASTSURFER_SIF:-/mnt/nfs/home/urmc-sh.rochester.edu/pndagiji/Documents/others/containers/fastsurfer_latest.sif}"
+FREESURFER_SIF="${FREESURFER_SIF:-}"
+FASTSURFER_SIF="${FASTSURFER_SIF:-}"
 
 INPUT_FILE="$(find "$INPUT_DIR" -maxdepth 1 \( -name '*.nii' -o -name '*.nii.gz' \) | head -1)"
 if [[ -z "$INPUT_FILE" ]]; then
@@ -60,15 +60,15 @@ if [[ "$NUM_THREADS" -lt 1 ]]; then
 fi
 
 if [[ "$FASTSURFER" -eq 1 ]]; then
-  if [[ ! -f "$FASTSURFER_SIF" ]]; then
-    echo "ERROR: FastSurfer SIF not found: $FASTSURFER_SIF" >&2
+  if [[ -z "$FASTSURFER_SIF" || ! -f "$FASTSURFER_SIF" ]]; then
+    echo "ERROR: Set FASTSURFER_SIF to your FastSurfer Apptainer image (.sif)" >&2
     exit 1
   fi
   SEG_STEP="fastsurfer-processing"
   SEG_LABEL="FastSurfer"
 else
-  if [[ ! -f "$FREESURFER_SIF" ]]; then
-    echo "ERROR: FreeSurfer SIF not found: $FREESURFER_SIF" >&2
+  if [[ -z "$FREESURFER_SIF" || ! -f "$FREESURFER_SIF" ]]; then
+    echo "ERROR: Set FREESURFER_SIF to your FreeSurfer Apptainer image (.sif)" >&2
     exit 1
   fi
   SEG_STEP="freesurfer-processing"

@@ -102,7 +102,7 @@ BibTeX
      author = {Ndagijimana, Philbert and Brennan, Daniel and Shinohara, Russell and Gugger, James},
      year   = {2026},
      url    = {https://github.com/phindagijimana/AutoHS},
-     version = {0.1.8}
+     version = {0.1.9}
    }
 
 Related software

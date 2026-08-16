@@ -31,8 +31,8 @@ echo "Setting GitHub secrets on $REPO ..."
 gh secret set DOCKERHUB_USERNAME --repo "$REPO" --body "$USER"
 gh secret set DOCKERHUB_TOKEN --repo "$REPO" --body "$TOKEN"
 
-echo "Triggering Publish Docker Image workflow for tag 0.1.8 ..."
-gh workflow run "Publish Docker Image" --repo "$REPO" -f tag=0.1.8
+echo "Triggering Publish Docker Image workflow for tag 0.1.9 ..."
+gh workflow run "Publish Docker Image" --repo "$REPO" -f tag=0.1.9
 
 echo "Done. Watch: https://github.com/$REPO/actions/workflows/docker-publish.yml"
-echo "After success: docker pull autohs/autohs:0.1.8"
+echo "After success: docker pull autohs/autohs:0.1.9"

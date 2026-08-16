@@ -37,6 +37,7 @@ web application that implements the AutoHS pipeline (dashboard, API, deployment)
    roadmap
    bids_apps_hub
    maintainers
+   privacy
 
 Indices and tables
 ==================
