@@ -2,7 +2,8 @@ Methods boilerplate
 ===================
 
 AutoHS provides copy-paste methods text for manuscripts, similar to NiPreps BIDS Apps
-(fMRIPrep, QSIPrep).
+(fMRIPrep, QSIPrep). For the scientific background (AI formula, thresholds, clinical context),
+see :doc:`theory`.
 
 Generate boilerplate
 --------------------

@@ -47,7 +47,7 @@ Under ``<output_dir>/autohs/`` with BIDS Derivatives-style filenames (``desc-aut
 **What is the asymmetry index (AI)?**
 
 ``AI = (L − R) / (L + R)`` using hippocampal volumes from segmentation statistics. See
-:doc:`outputs` for HS classification thresholds.
+:doc:`theory` for clinical context and :doc:`outputs` for HS classification thresholds.
 
 **Can I regenerate reports without re-running segmentation?**
 

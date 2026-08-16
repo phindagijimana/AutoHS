@@ -1,7 +1,8 @@
 Preprocessing
 =============
 
-AutoHS is a two-step participant-level workflow.
+AutoHS is a two-step participant-level workflow. For the **clinical rationale**, asymmetry
+index formula, and HS threshold theory, see :doc:`theory`.
 
 Pipeline overview
 -----------------
@@ -33,10 +34,13 @@ Step 2 — AI-compute
 -------------------
 
 Runs in the AutoHS Python environment (native on Apptainer/HPC, Docker image otherwise).
+This step implements the quantitative core described in :doc:`theory`:
 
-1. Parse hippocampal volumes from segmentation stats
-2. Compute asymmetry index: ``AI = (L − R) / (L + R)``
-3. Apply HS classification thresholds
+1. Parse **Left-Hippocampus** and **Right-Hippocampus** volumes (mm³) from ``aseg.stats`` or
+   ``aseg+DKT.stats``
+2. Compute asymmetry index: :math:`\mathrm{AI} = (L - R) / (L + R)`
+3. Apply **volume laterality** (±0.05) and **HS screening** thresholds (Brain Communications,
+   in press)
 4. Generate ``report.json``, ``summary.txt``, ``report.pdf``, and optional overlays
 
 Processing a subject/session pair
@@ -72,5 +76,5 @@ segmentation progress.
 References
 ----------
 
-See :doc:`citation` for the publication describing the hippocampal asymmetry index and
-HS classification thresholds.
+See :doc:`theory` for the full scientific background and :doc:`citation` for the publication
+describing the hippocampal asymmetry index and HS classification thresholds.

@@ -1,8 +1,8 @@
 Outputs
 =======
 
-AutoHS writes BIDS derivatives under ``<output_dir>/autohs/``, following the same
-organizational pattern as QSIPrep (pipeline name as top-level derivatives folder).
+AutoHS writes BIDS derivatives under ``<output_dir>/autohs/``. For interpretation of the
+metrics and thresholds in each report, see :doc:`theory`.
 
 Directory layout
 ----------------
@@ -50,7 +50,11 @@ Check ``autohs_run.json`` for the number of processed scans, pipeline backend
 Hippocampal sclerosis classification
 ------------------------------------
 
-Metrics follow the Brain Communications (in press) thresholds:
+Reports include two related layers (see :doc:`theory`):
+
+**Volume laterality** (±0.05): descriptive left/right imbalance.
+
+**HS screening** (Brain Communications, in press): pathology-oriented thresholds —
 
 +-------------------------------+-----------------------------------+
 | Condition                     | Interpretation                    |
@@ -61,6 +65,11 @@ Metrics follow the Brain Communications (in press) thresholds:
 +-------------------------------+-----------------------------------+
 | otherwise                     | Balanced (No HS)                  |
 +-------------------------------+-----------------------------------+
+
+.. note::
+
+   “Left HS suspected” appears when volumes are **right-dominant** (smaller left hippocampus,
+   more negative AI). See :doc:`theory` for the clinical naming convention.
 
 Volume laterality uses ±0.05 (AutoHS defaults).
 

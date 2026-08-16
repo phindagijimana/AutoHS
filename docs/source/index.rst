@@ -5,13 +5,39 @@ AutoHS documentation
    :target: https://autohs.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-**AutoHS** is a `BIDS App <https://bids.neuroimaging.io/bids_apps.html>`_ for hippocampal
-asymmetry analysis from T1-weighted MRI. It performs segmentation (FreeSurfer or
-FastSurfer), extracts hippocampal volumes, computes the asymmetry index (AI), and
-generates clinical reports for hippocampal sclerosis (HS) screening.
+**AutoHS** is a `BIDS App <https://bids.neuroimaging.io/bids_apps.html>`_ for automated
+**hippocampal sclerosis (HS) screening** from T1-weighted MRI. It is designed for epilepsy
+surgical workup and research cohorts with BIDS-organized anatomical scans.
 
-AutoHS is designed for epilepsy surgical workup and research cohorts with BIDS-organized
-T1w anatomical scans.
+What problem does AutoHS solve?
+-------------------------------
+
+Temporal lobe epilepsy is often associated with **hippocampal sclerosis** — atrophy and
+structural change in one hippocampus. Clinicians look for **left–right hippocampal volume
+asymmetry** on MRI. AutoHS turns that question into a reproducible, quantitative pipeline:
+
+#. **Segment** the T1w scan (FreeSurfer or FastSurfer) to label subcortical structures
+#. **Measure** left and right hippocampal volumes (mm³)
+#. **Compute** the asymmetry index (AI): :math:`(L - R) / (L + R)`
+#. **Classify** volume laterality and apply published **HS screening thresholds**
+#. **Publish** JSON metrics, a clinical summary, and a PDF report as BIDS derivatives
+
+AutoHS is **decision-support software**, not a standalone diagnosis. Results should be
+interpreted with clinical context, EEG, and pathology when available.
+
+Start here
+----------
+
+New users:
+
+* :doc:`theory` — **science and theory** (clinical background, AI formula, thresholds)
+* :doc:`quickstart` — run on sample or your own BIDS dataset in minutes
+* :doc:`installation` — Docker, Apptainer, or source install
+
+Researchers writing a paper:
+
+* :doc:`methods` — generate methods-section boilerplate (``python run.py --md-only-boilerplate``)
+* :doc:`citation` — required references for AutoHS, IDEAS sample data, and third-party tools
 
 Related software
 ----------------
@@ -23,6 +49,7 @@ web application that implements the AutoHS pipeline (dashboard, API, deployment)
    :maxdepth: 2
    :caption: Contents
 
+   theory
    installation
    quickstart
    sample_data
