@@ -33,7 +33,7 @@ keywords:
   - FastSurfer
   - neuroimaging
 license: MIT
-version: 0.1.3
+version: 0.1.4
 date-released: 2026-08-15
 preferred-citation:
   type: article

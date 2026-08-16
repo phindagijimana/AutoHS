@@ -3,6 +3,12 @@ Changes
 
 Release history for AutoHS. See also ``CHANGELOG.md`` in the repository root.
 
+0.1.4 (2026-08-16)
+------------------
+
+* Fall back to filesystem T1w discovery when PyBIDS finds no scans (unless a
+  ``--bids-filter-file`` is provided)
+
 0.1.3 (2026-08-15)
 ------------------
 

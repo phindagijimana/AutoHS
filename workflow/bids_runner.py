@@ -108,7 +108,8 @@ def discover_t1w_scans(
                             t1w_path=Path(path),
                         )
                     )
-        return scans
+        if scans or bids_filter_file is not None:
+            return scans
 
     for subject_dir in sorted(bids_dir.glob("sub-*")):
         subject = subject_dir.name.replace("sub-", "", 1)

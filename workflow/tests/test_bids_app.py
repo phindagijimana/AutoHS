@@ -24,6 +24,17 @@ class BidsDiscoveryTests(unittest.TestCase):
             self.assertEqual(scans[0].session_label, "1")
             self.assertEqual(scans[0].t1w_path, t1w)
 
+    def test_pybids_empty_falls_back_without_filter(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            anat = root / "sub-002" / "anat"
+            anat.mkdir(parents=True)
+            t1w = anat / "sub-002_T1w.nii.gz"
+            t1w.write_bytes(b"")
+            scans = discover_t1w_scans(root, participant_labels=["002"])
+            self.assertEqual(len(scans), 1)
+            self.assertIsNone(scans[0].session_label)
+
     def test_derivative_subject_dir(self) -> None:
         scan = T1wScan("001", "1", Path("/tmp/t1w.nii.gz"))
         out = derivative_subject_dir(Path("/out/autohs"), scan)
