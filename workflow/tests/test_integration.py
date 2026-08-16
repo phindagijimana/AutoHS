@@ -13,7 +13,12 @@ from unittest.mock import patch
 
 from workflow.bids_runner import BidsRunner, discover_t1w_scans
 from workflow.derivatives import derivative_paths
-from workflow.tests.helpers import fake_fastsurfer, fake_freesurfer, install_fake_segmentation
+from workflow.tests.helpers import (
+    fake_fastsurfer,
+    fake_freesurfer,
+    fake_run_ai_compute,
+    install_fake_segmentation,
+)
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 MINIMAL_BIDS = FIXTURES / "minimal_bids"
@@ -25,8 +30,9 @@ class BidsAppIntegrationTests(unittest.TestCase):
         if not (MINIMAL_BIDS / "sub-001" / "ses-1" / "anat" / "sub-001_ses-1_T1w.nii.gz").exists():
             self.skipTest("minimal BIDS fixture missing")
 
+    @patch("workflow.bids_runner.run_ai_compute", side_effect=fake_run_ai_compute)
     @patch("workflow.bids_runner.run_fastsurfer", side_effect=fake_fastsurfer)
-    def test_fastsurfer_pipeline_end_to_end(self, _mock_fastsurfer) -> None:
+    def test_fastsurfer_pipeline_end_to_end(self, _mock_fastsurfer, _mock_ai) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             output_dir = root / "out"
@@ -58,8 +64,9 @@ class BidsAppIntegrationTests(unittest.TestCase):
             self.assertEqual(run_log["pipeline"], "fastsurfer")
             self.assertFalse(run_log["reports_only"])
 
+    @patch("workflow.bids_runner.run_ai_compute", side_effect=fake_run_ai_compute)
     @patch("workflow.bids_runner.run_freesurfer", side_effect=fake_freesurfer)
-    def test_freesurfer_pipeline_end_to_end(self, _mock_freesurfer) -> None:
+    def test_freesurfer_pipeline_end_to_end(self, _mock_freesurfer, _mock_ai) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             output_dir = root / "out"
@@ -81,7 +88,8 @@ class BidsAppIntegrationTests(unittest.TestCase):
             metrics_path = published[0] / "sub-001_ses-1_desc-autohs_metrics.json"
             self.assertTrue(metrics_path.exists())
 
-    def test_reports_only_end_to_end(self) -> None:
+    @patch("workflow.bids_runner.run_ai_compute", side_effect=fake_run_ai_compute)
+    def test_reports_only_end_to_end(self, _mock_ai) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             output_dir = root / "out"
