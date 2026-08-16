@@ -3,6 +3,13 @@ Changes
 
 Release history for AutoHS. See also ``CHANGELOG.md`` in the repository root.
 
+0.1.8 (2026-08-16)
+------------------
+
+* IDEAS two-subject sample dataset, download script, and citation docs
+* FAQ, troubleshooting, methods boilerplate; ``--md-only-boilerplate`` CLI
+* Ecosystem setup helper; Docker smoke test in CI
+
 0.1.7 (2026-08-16)
 ------------------
 

@@ -34,6 +34,28 @@ jobs:
             workflow.tests.test_derivatives \
             workflow.tests.test_ecosystem \
             workflow.tests.test_integration \
+            workflow.tests.test_sample_data \
+            workflow.tests.test_boilerplate \
             -v
       - name: BIDS App CLI smoke test
-        run: python run.py --version
+        run: |
+          python run.py --version
+          python run.py --md-only-boilerplate | head -5
+  docker-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build BIDS App image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.bidsapp
+          load: true
+          tags: autohs/ci:smoke
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Container CLI smoke test
+        run: |
+          docker run --rm autohs/ci:smoke --version
+          docker run --rm autohs/ci:smoke --md-only-boilerplate | head -3

@@ -21,9 +21,13 @@ web application that implements the AutoHS pipeline (dashboard, API, deployment)
 
    installation
    quickstart
+   sample_data
    usage
    outputs
    preprocessing
+   methods
+   faq
+   troubleshooting
    citation
    changes
    roadmap

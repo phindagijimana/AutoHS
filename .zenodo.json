@@ -1,0 +1,27 @@
+{
+  "title": "AutoHS",
+  "description": "BIDS App for automated hippocampal sclerosis screening from T1-weighted MRI.",
+  "creators": [
+    {
+      "name": "Ndagijimana, Philbert",
+      "affiliation": "University of Rochester",
+      "orcid": ""
+    }
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "publication_date": "2026-08-16",
+  "keywords": [
+    "BIDS App",
+    "hippocampal sclerosis",
+    "epilepsy",
+    "neuroimaging"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/phindagijimana/AutoHS",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

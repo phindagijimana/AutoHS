@@ -10,3 +10,5 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 license.txt
+sample_data/ideas_bids/**/*.nii.gz
+sample_data/ideas_bids/README

@@ -40,6 +40,19 @@ docker run --rm -v /data/bids:/data:ro -v /data/out:/out autohs/autohs:latest \
 
 Outputs: `output/autohs/sub-*/` with `report.json`, `report.pdf`, `summary.txt`.
 
+### IDEAS sample dataset
+
+Two public IDEAS subjects (OpenNeuro [ds005602](https://openneuro.org/datasets/ds005602)) are
+provided for tutorials. See [IDEAS data](https://sites.google.com/view/cnnp-lab/ideas-data).
+
+```bash
+./scripts/download_ideas_sample.sh
+python run.py sample_data/ideas_bids bids_output participant \
+  --participant-label 1 2 --fastsurfer --runtime apptainer -w bids_output/work
+```
+
+Cite IDEAS, FreeSurfer/FastSurfer, and AutoHS — see [citation docs](docs/source/citation.rst).
+
 Full documentation: [docs/source/index.rst](docs/source/index.rst) (Sphinx / Read the Docs layout, QSIPrep-style).
 
 See also the `./AutoHS` CLI for single-file job queue workflows.

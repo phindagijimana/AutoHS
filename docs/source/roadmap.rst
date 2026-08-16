@@ -1,42 +1,55 @@
 Roadmap
 =======
 
-AutoHS is being brought to the same **production bar** as mature BIDS Apps such as
-QSIPrep. Work proceeds in ordered stages.
+AutoHS targets the same **production bar** as mature BIDS Apps such as QSIPrep.
+Status as of **v0.1.8**:
 
 Stage 1 — Publish
 -----------------
 
-* Read the Docs configuration (``.readthedocs.yaml``)
-* Docker Hub image ``autohs/autohs`` via GitHub Actions
-* CI: tests + documentation build on every PR
-
-Connect Read the Docs and Docker Hub secrets (see :doc:`maintainers`).
+* Read the Docs configuration (``.readthedocs.yaml``) — **config done**; import project at
+  `<https://readthedocs.org/dashboard/import/manual/?url=https://github.com/phindagijimana/AutoHS>`_
+* Docker Hub image ``autohs/autohs`` via GitHub Actions — **workflow done**; add
+  ``DOCKERHUB_*`` secrets (see :doc:`maintainers`)
+* CI: tests + documentation build on every PR — **done**
 
 Stage 2 — BIDS derivatives compliance
 -------------------------------------
 
-* BIDS Derivatives filenames (``desc-autohs`` entities)
-* JSON sidecars with pipeline provenance
-* ``Sources`` / ``SpatialReference`` metadata where applicable
+* BIDS Derivatives filenames (``desc-autohs`` entities) — **done**
+* JSON sidecars with pipeline provenance — **done**
+* ``Sources`` / ``SpatialReference`` metadata — **done**
 
 Stage 3 — Feature completeness
 ------------------------------
 
-* ``--bids-filter-file`` (PyBIDS filters JSON for T1w selection)
-* ``--reports-only`` (re-run AI-compute from existing segmentation in ``-w``)
+* ``--bids-filter-file`` — **done**
+* ``--reports-only`` — **done**
+* ``--md-only-boilerplate`` — **done**
+* ``--not-stop-on-first-crash`` — **done**
 
 Stage 4 — Integration testing
 -----------------------------
 
-* CI job on a minimal BIDS fixture dataset (``workflow/tests/fixtures/``)
-* End-to-end smoke test with mocked FastSurfer/FreeSurfer segmentation
+* CI on minimal BIDS fixture — **done**
+* End-to-end tests with mocked segmentation — **done**
+* Docker image smoke test in CI — **done**
 
 Stage 5 — Ecosystem
 -------------------
 
-* ``CITATION.cff`` and ``CHANGELOG.md`` for releases
-* Apptainer ``.sif`` artifacts on GitHub releases (``.github/workflows/apptainer-release.yml``)
-* BIDS website registration template (``registry/bids-website-apps.yml``) — see :doc:`bids_apps_hub`
+* ``CITATION.cff`` and ``CHANGELOG.md`` — **done**
+* Apptainer ``.sif`` on GitHub Releases — **done**
+* IDEAS sample dataset + citations — **done**
+* BIDS website PR — **submitted** (see :doc:`bids_apps_hub`)
+* Zenodo DOI — **pending** first GitHub release with Zenodo integration
 
-**Maintainer action:** open a PR to `bids-standard/bids-website` ``apps.yml`` using the registry snippet.
+Documentation depth (QSIPrep parity)
+------------------------------------
+
+* Installation, usage, outputs, preprocessing — **done**
+* Sample data, citation, methods boilerplate — **done**
+* FAQ and troubleshooting — **done**
+* Live Read the Docs site — **pending** maintainer import
+
+Run ``./scripts/setup_ecosystem.sh`` for the remaining one-time maintainer steps.

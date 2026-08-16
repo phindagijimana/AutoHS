@@ -110,7 +110,22 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Re-run AI-compute and reports from existing segmentation in the work directory.",
     )
+    workflow.add_argument(
+        "--not-stop-on-first-crash",
+        action="store_true",
+        help="Continue processing remaining subjects if one scan fails.",
+    )
     return parser
+
+
+def print_methods_boilerplate(argv: list[str]) -> int:
+    if "--md-only-boilerplate" not in argv:
+        return -1
+    fastsurfer = "--fastsurfer" in argv
+    from workflow.boilerplate import methods_boilerplate
+
+    print(methods_boilerplate(version=__version__, fastsurfer=fastsurfer))
+    return 0
 
 
 def maybe_validate_bids(bids_dir: Path, skip: bool) -> None:
@@ -131,8 +146,13 @@ def shutil_which(name: str) -> str | None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    cli = list(sys.argv[1:] if argv is None else argv)
+    boilerplate_status = print_methods_boilerplate(cli)
+    if boilerplate_status >= 0:
+        return boilerplate_status
+
     parser = build_parser()
-    args = parser.parse_args(argv)
+    args = parser.parse_args(cli)
 
     if args.reports_only and args.fastsurfer:
         parser.error("--reports-only cannot be combined with --fastsurfer.")
@@ -162,6 +182,7 @@ def main(argv: list[str] | None = None) -> int:
         runtime=runtime,
         n_threads=args.n_threads,
         reports_only=args.reports_only,
+        stop_on_first_crash=not args.not_stop_on_first_crash,
     )
 
     print(f"AutoHS completed {len(published)} scan(s).")

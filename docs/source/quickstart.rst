@@ -54,6 +54,24 @@ FreeSurfer license:
      --fastsurfer \
      --runtime apptainer
 
+IDEAS sample dataset (recommended)
+----------------------------------
+
+Download two public IDEAS subjects (OpenNeuro ``ds005602``), then run AutoHS:
+
+.. code-block:: bash
+
+   ./scripts/download_ideas_sample.sh
+
+   python run.py sample_data/ideas_bids bids_output participant \
+     --participant-label 1 2 \
+     --fastsurfer \
+     --runtime apptainer \
+     -w bids_output/work
+
+See :doc:`sample_data` and :doc:`citation` for required IDEAS, FreeSurfer, and FastSurfer
+citations.
+
 Using CIDUR BIDS data
 ---------------------
 

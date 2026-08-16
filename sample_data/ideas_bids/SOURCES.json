@@ -1,0 +1,18 @@
+{
+  "dataset_name": "IDEAS sample (2 subjects)",
+  "subjects": ["sub-1", "sub-2"],
+  "modalities": ["T1w"],
+  "sources": [
+    {
+      "name": "IDEAS (Imaging Database for Epilepsy And Surgery)",
+      "landing_page": "https://sites.google.com/view/cnnp-lab/ideas-data",
+      "openneuro": "https://openneuro.org/datasets/ds005602",
+      "openneuro_doi": "10.18112/openneuro.ds005602.v1.0.0",
+      "publication_doi": "10.1111/epi.18192",
+      "publication": "Taylor PN, Wang Y, Simpson C, et al. The imaging database for epilepsy and surgery (IDEAS). Epilepsia. 2025;66(2):471-481.",
+      "license": "CC0"
+    }
+  ],
+  "download_script": "scripts/download_ideas_sample.sh",
+  "s3_base": "https://s3.amazonaws.com/openneuro.org/ds005602"
+}

@@ -116,12 +116,13 @@ def discover_t1w_scans(
                             )
                         )
         except Exception:
-            if bids_filter_file is not None:
-                return []
-        if scans or bids_filter_file is not None:
+            scans = []
+        if scans:
             return scans
-    elif bids_filter_file is not None:
-        return []
+
+    filter_session = t1w_filters.get("session")
+    if filter_session is not None:
+        filter_session = str(filter_session)
 
     for subject_dir in sorted(bids_dir.glob("sub-*")):
         subject = subject_dir.name.replace("sub-", "", 1)
@@ -135,6 +136,10 @@ def discover_t1w_scans(
                 session = session_dir.name.replace("ses-", "", 1)
                 if session_labels and session not in session_labels:
                     continue
+                if filter_session is not None and session != filter_session:
+                    continue
+            elif filter_session is not None:
+                continue
             anat_dir = search_root / "anat"
             if not anat_dir.exists():
                 continue
@@ -242,6 +247,7 @@ class BidsRunner:
         runtime: Optional[str] = None,
         n_threads: Optional[int] = None,
         reports_only: bool = False,
+        stop_on_first_crash: bool = True,
     ) -> list[Path]:
         bids_dir = bids_dir.resolve()
         output_root = output_dir / "autohs"
@@ -270,60 +276,75 @@ class BidsRunner:
             pipeline = "fastsurfer" if fastsurfer else "freesurfer"
 
         published: list[Path] = []
+        failures: list[str] = []
 
         for scan in scans:
-            job_id = scan_job_id(scan)
-            subject_id = scan_work_subject_id(scan)
+            try:
+                job_id = scan_job_id(scan)
+                subject_id = scan_work_subject_id(scan)
 
-            scan_work = work_dir / subject_id
-            scan_work.mkdir(parents=True, exist_ok=True)
+                scan_work = work_dir / subject_id
+                scan_work.mkdir(parents=True, exist_ok=True)
 
-            if reports_only:
-                input_copy, seg_dir, seg_subject_id = resolve_existing_work(scan_work, job_id)
-            else:
-                input_copy = scan_work / "input" / scan.t1w_path.name
-                input_copy.parent.mkdir(parents=True, exist_ok=True)
-                if not input_copy.exists():
-                    shutil.copy2(scan.t1w_path, input_copy)
-
-                seg_subject_id = segmentation_subject_id(job_id)
-                if fastsurfer:
-                    seg_dir = run_fastsurfer(
-                        input_file=input_copy,
-                        work_dir=scan_work,
-                        subject_id=seg_subject_id,
-                        runtime=runtime,
-                        job_id=job_id,
-                        n_threads=n_threads,
-                    )
+                if reports_only:
+                    input_copy, seg_dir, seg_subject_id = resolve_existing_work(scan_work, job_id)
                 else:
-                    seg_dir = run_freesurfer(
-                        input_file=input_copy,
-                        work_dir=scan_work,
-                        subject_id=seg_subject_id,
-                        license_path=license_path,  # type: ignore[arg-type]
-                        runtime=runtime,
-                        job_id=job_id,
-                    )
+                    input_copy = scan_work / "input" / scan.t1w_path.name
+                    input_copy.parent.mkdir(parents=True, exist_ok=True)
+                    if not input_copy.exists():
+                        shutil.copy2(scan.t1w_path, input_copy)
 
-            work_output = run_ai_compute(
-                repo_root=self.repo_root,
-                job_id=job_id,
-                input_file=input_copy,
-                freesurfer_dir=seg_dir,
-                output_dir=scan_work / "output",
-                subject_id=seg_subject_id,
-                runtime=runtime,
-            )
+                    seg_subject_id = segmentation_subject_id(job_id)
+                    if fastsurfer:
+                        seg_dir = run_fastsurfer(
+                            input_file=input_copy,
+                            work_dir=scan_work,
+                            subject_id=seg_subject_id,
+                            runtime=runtime,
+                            job_id=job_id,
+                            n_threads=n_threads,
+                        )
+                    else:
+                        seg_dir = run_freesurfer(
+                            input_file=input_copy,
+                            work_dir=scan_work,
+                            subject_id=seg_subject_id,
+                            license_path=license_path,  # type: ignore[arg-type]
+                            runtime=runtime,
+                            job_id=job_id,
+                        )
 
-            derivative_dir = publish_derivatives(
-                work_output,
-                output_root,
-                scan=scan,
-                bids_dir=bids_dir,
-                pipeline=pipeline,
+                work_output = run_ai_compute(
+                    repo_root=self.repo_root,
+                    job_id=job_id,
+                    input_file=input_copy,
+                    freesurfer_dir=seg_dir,
+                    output_dir=scan_work / "output",
+                    subject_id=seg_subject_id,
+                    runtime=runtime,
+                )
+
+                derivative_dir = publish_derivatives(
+                    work_output,
+                    output_root,
+                    scan=scan,
+                    bids_dir=bids_dir,
+                    pipeline=pipeline,
+                )
+                published.append(derivative_dir)
+            except Exception as exc:
+                label = f"sub-{scan.subject_label}"
+                if scan.session_label:
+                    label += f"_ses-{scan.session_label}"
+                if stop_on_first_crash:
+                    raise
+                failures.append(f"{label}: {exc}")
+
+        if failures:
+            summary = "; ".join(failures)
+            raise RuntimeError(
+                f"AutoHS completed {len(published)} scan(s) with {len(failures)} failure(s): {summary}"
             )
-            published.append(derivative_dir)
 
         log = {
             "completed_at": datetime.now(timezone.utc).isoformat(),

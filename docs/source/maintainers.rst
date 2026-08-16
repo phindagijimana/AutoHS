@@ -14,6 +14,8 @@ Release checklist
 5. Confirm GitHub Actions: **CI**, **Documentation**, **Publish Docker Image**, **Release Apptainer Image**.
 6. Confirm Read the Docs build for ``main`` / the tag.
 7. Optional: PR to `bids-standard/bids-website` using ``registry/bids-website-apps.yml`` (see :doc:`bids_apps_hub`).
+8. Enable `Zenodo-GitHub integration <https://zenodo.org/account/settings/github/>`_ and add the
+   release DOI to ``CITATION.cff`` (remove the placeholder after the first Zenodo archive).
 
 Read the Docs
 -------------
@@ -21,9 +23,13 @@ Read the Docs
 One-time setup:
 
 1. Sign in at `<https://readthedocs.org>`_ with GitHub.
-2. Import the ``phindagijimana/AutoHS`` repository.
-3. RTD reads ``.readthedocs.yaml`` automatically.
-4. Set the default branch to ``main`` and enable PR previews (optional).
+2. Import the repository (direct link):
+   `<https://readthedocs.org/dashboard/import/manual/?url=https://github.com/phindagijimana/AutoHS>`_
+3. Set the project **slug** to ``autohs`` so docs resolve at ``autohs.readthedocs.io``.
+4. RTD reads ``.readthedocs.yaml`` automatically.
+5. Set the default branch to ``main`` and enable PR previews (optional).
+
+Run ``./scripts/setup_ecosystem.sh`` for a full maintainer checklist (RTD, Docker Hub, Zenodo).
 
 Local doc build:
 
@@ -44,6 +50,9 @@ One-time setup:
    * ``DOCKERHUB_TOKEN`` (access token, not password)
 
 3. Push a semver tag to trigger **Publish Docker Image**, or run the workflow manually.
+
+Without ``DOCKERHUB_USERNAME`` / ``DOCKERHUB_TOKEN``, CI still **builds** the image but
+does not push to Docker Hub (see ``scripts/setup_ecosystem.sh``).
 
 Users install with:
 

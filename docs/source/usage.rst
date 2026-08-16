@@ -79,6 +79,18 @@ Workflow configuration
    Skip segmentation and re-run AI-compute plus derivative publishing from an
    existing ``-w`` work directory (requires prior full run for the same subject/session).
 
+``--not-stop-on-first-crash``
+   Continue processing remaining subjects when one scan fails (default: stop immediately).
+
+Methods boilerplate
+~~~~~~~~~~~~~~~~~~~
+
+``--md-only-boilerplate``
+   Print Markdown methods text for manuscripts and exit (NiPreps-style). Combine with
+   ``--fastsurfer`` when FastSurfer was used. Does not require ``bids_dir`` arguments::
+
+      python run.py --md-only-boilerplate > methods_autohs.md
+
 Participant mode
 ----------------
 
