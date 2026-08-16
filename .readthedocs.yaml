@@ -14,5 +14,6 @@ python:
   install:
     - requirements: docs/requirements.txt
 
-formats:
-  - pdf
+# PDF builds are optional; enable after verifying LaTeX deps on RTD.
+# formats:
+#   - pdf

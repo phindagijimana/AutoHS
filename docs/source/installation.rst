@@ -32,9 +32,9 @@ Run:
      --participant-label 001 \
      --fs-license-file /license.txt
 
-Documentation is hosted on Read the Docs once the repository is connected:
+Documentation is hosted on Read the Docs:
 
-`<https://autohs.readthedocs.io>`_
+`<https://autohs.readthedocs.io/en/latest/>`_
 
 Apptainer / Singularity Container
 ---------------------------------

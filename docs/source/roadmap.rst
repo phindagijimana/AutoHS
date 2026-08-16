@@ -7,8 +7,7 @@ Status as of **v0.1.8**:
 Stage 1 — Publish
 -----------------
 
-* Read the Docs configuration (``.readthedocs.yaml``) — **config done**; import project at
-  `<https://readthedocs.org/dashboard/import/manual/?url=https://github.com/phindagijimana/AutoHS>`_
+* Read the Docs configuration (``.readthedocs.yaml``) — **live** at `<https://autohs.readthedocs.io/en/latest/>`_
 * Docker Hub image ``autohs/autohs`` via GitHub Actions — **workflow done**; add
   ``DOCKERHUB_*`` secrets (see :doc:`maintainers`)
 * CI: tests + documentation build on every PR — **done**
@@ -50,6 +49,6 @@ Documentation depth (QSIPrep parity)
 * Installation, usage, outputs, preprocessing — **done**
 * Sample data, citation, methods boilerplate — **done**
 * FAQ and troubleshooting — **done**
-* Live Read the Docs site — **pending** maintainer import
+* Live Read the Docs site — **done** (`autohs.readthedocs.io`)
 
 Run ``./scripts/setup_ecosystem.sh`` for the remaining one-time maintainer steps.

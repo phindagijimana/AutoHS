@@ -14,6 +14,8 @@ echo "   - Enable builds on tag pushes after first import"
 echo
 
 echo "2) Docker Hub (image push skipped in CI without secrets)"
+echo "   Run: DOCKERHUB_USERNAME=... DOCKERHUB_TOKEN=... ./scripts/setup_dockerhub.sh"
+echo "   Or manually:"
 echo "   - Create repository: https://hub.docker.com/repository/create?name=autohs"
 echo "   - Add GitHub secrets on phindagijimana/AutoHS:"
 echo "       DOCKERHUB_USERNAME"
@@ -21,9 +23,9 @@ echo "       DOCKERHUB_TOKEN"
 echo "   - Re-run workflow: Publish Docker Image (workflow_dispatch)"
 echo
 
-echo "3) Zenodo DOI (replace placeholder in CITATION.cff after first release)"
-echo "   - Enable Zenodo-GitHub integration: https://zenodo.org/account/settings/github/"
-echo "   - Create a GitHub release; copy the new Zenodo DOI into CITATION.cff"
+echo "3) Zenodo DOI (add to CITATION.cff after first archive)"
+echo "   Run: ./scripts/setup_zenodo.sh"
+echo "   Or: https://zenodo.org/account/settings/github/ → enable AutoHS"
 echo
 
 echo "4) BIDS Apps hub"

@@ -1,6 +1,10 @@
 AutoHS documentation
 ====================
 
+.. image:: https://readthedocs.org/projects/autohs/badge/?version=latest
+   :target: https://autohs.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+
 **AutoHS** is a `BIDS App <https://bids.neuroimaging.io/bids_apps.html>`_ for hippocampal
 asymmetry analysis from T1-weighted MRI. It performs segmentation (FreeSurfer or
 FastSurfer), extracts hippocampal volumes, computes the asymmetry index (AI), and

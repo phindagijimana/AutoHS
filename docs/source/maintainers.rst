@@ -20,16 +20,16 @@ Release checklist
 Read the Docs
 -------------
 
-One-time setup:
+One-time setup (completed for ``autohs``):
 
 1. Sign in at `<https://readthedocs.org>`_ with GitHub.
-2. Import the repository (direct link):
-   `<https://readthedocs.org/dashboard/import/manual/?url=https://github.com/phindagijimana/AutoHS>`_
-3. Set the project **slug** to ``autohs`` so docs resolve at ``autohs.readthedocs.io``.
-4. RTD reads ``.readthedocs.yaml`` automatically.
-5. Set the default branch to ``main`` and enable PR previews (optional).
+2. Import the repository — project slug: ``autohs``.
+3. RTD reads ``.readthedocs.yaml`` automatically.
+4. Default branch: ``main``; enable PR previews (optional).
 
-Run ``./scripts/setup_ecosystem.sh`` for a full maintainer checklist (RTD, Docker Hub, Zenodo).
+Live site: `<https://autohs.readthedocs.io/en/latest/>`_
+
+Run ``./scripts/setup_ecosystem.sh`` for Docker Hub and Zenodo steps.
 
 Local doc build:
 
