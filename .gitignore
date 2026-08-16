@@ -1,5 +1,7 @@
 venv/
 .ci-venv/
+.ci-venv2/
+.gh-test-venv/
 logs/
 data/
 docs/_build/

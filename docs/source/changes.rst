@@ -3,6 +3,11 @@ Changes
 
 Release history for AutoHS. See also ``CHANGELOG.md`` in the repository root.
 
+0.1.6 (2026-08-16)
+------------------
+
+* Harden BIDS discovery and CI environment (``PYTHONPATH``, PyBIDS error handling)
+
 0.1.5 (2026-08-16)
 ------------------
 
