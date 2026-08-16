@@ -18,6 +18,10 @@ except ImportError:
     BIDSLayout = None  # type: ignore
 
 
+def _repo_version() -> str:
+    return (Path(__file__).resolve().parents[1] / "version").read_text(encoding="utf-8").strip()
+
+
 def scan_job_id(scan: T1wScan) -> str:
     if scan.session_label:
         return f"{scan.subject_label}_{scan.session_label}"
@@ -146,7 +150,7 @@ def write_derivatives_description(output_root: Path, pipeline_name: str = "autoh
         "GeneratedBy": [
             {
                 "Name": pipeline_name,
-                "Version": open(Path(__file__).resolve().parents[1] / "version").read().strip(),
+                "Version": _repo_version(),
                 "Description": (
                     "Automated hippocampal sclerosis workflow: segmentation, "
                     "hippocampal volumes, asymmetry index, and clinical report."
@@ -186,7 +190,7 @@ def publish_derivatives(
     from workflow.derivatives import derivative_paths, publish_bids_derivatives
 
     if version is None:
-        version = open(Path(__file__).resolve().parents[1] / "version").read().strip()
+        version = _repo_version()
     paths = derivative_paths(output_root, scan)
     publish_bids_derivatives(
         work_output,

@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 FREESURFER_IMAGE = os.getenv("FREESURFER_IMAGE", "freesurfer/freesurfer:7.4.1")
@@ -17,15 +18,6 @@ FASTSURFER_SIF = os.getenv(
     "FASTSURFER_SIF",
     "/mnt/nfs/home/urmc-sh.rochester.edu/pndagiji/Documents/others/containers/fastsurfer_latest.sif",
 )
-
-
-def _native_python(repo_root: Path) -> str:
-    venv_python = repo_root / "venv" / "bin" / "python"
-    if venv_python.exists():
-        return str(venv_python)
-    import sys
-
-    return sys.executable
 
 
 def _run_cmd(cmd: list[str], label: str, env: dict[str, str] | None = None) -> None:
@@ -289,24 +281,17 @@ def run_ai_compute(
         ]
         _run_cmd(cmd, "AI-compute (Docker)")
     else:
-        env = os.environ.copy()
-        env["PYTHONPATH"] = str(repo_root.resolve())
-        cmd = [
-            _native_python(repo_root),
-            "-m",
-            "ai_compute.main",
-            "--job-id",
+        if str(repo_root.resolve()) not in sys.path:
+            sys.path.insert(0, str(repo_root.resolve()))
+        from ai_compute.main import run as run_ai_compute_step
+
+        run_ai_compute_step(
             job_id,
-            "--input",
-            str(input_file.resolve()),
-            "--freesurfer",
-            str(freesurfer_dir.resolve()),
-            "--output",
-            str(output_dir.resolve()),
-            "--subject-id",
+            input_file.resolve(),
+            freesurfer_dir.resolve(),
+            output_dir.resolve(),
             subject_id,
-        ]
-        _run_cmd(cmd, "AI-compute (native)", env=env)
+        )
 
     result_file = output_dir / "ai_compute_result.json"
     if not result_file.exists():

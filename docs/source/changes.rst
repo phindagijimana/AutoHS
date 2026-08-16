@@ -3,6 +3,12 @@ Changes
 
 Release history for AutoHS. See also ``CHANGELOG.md`` in the repository root.
 
+0.1.5 (2026-08-16)
+------------------
+
+* Run native AI-compute in-process (fixes CI subprocess failures)
+* Fix unclosed ``version`` file handles during derivative publishing
+
 0.1.4 (2026-08-16)
 ------------------
 
