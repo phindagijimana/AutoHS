@@ -115,6 +115,7 @@ Related software
 Software citation file
 ------------------------
 
-The repository includes ``CITATION.cff`` for automated citation metadata (GitHub,
-reference managers, and Zenodo after the first release). Run ``./scripts/setup_ecosystem.sh``
-for Read the Docs, Docker Hub, and Zenodo setup steps.
+The repository includes ``CITATION.cff`` for automated citation metadata (GitHub and
+reference managers). After Zenodo archives a GitHub release, add the concept DOI to
+``CITATION.cff`` ``identifiers``. Maintainer steps: :doc:`maintainers` and
+``./scripts/setup_ecosystem.sh``.

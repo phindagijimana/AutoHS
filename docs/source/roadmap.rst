@@ -2,15 +2,15 @@ Roadmap
 =======
 
 AutoHS targets the same **production bar** as mature BIDS Apps such as QSIPrep.
-Status as of **v0.1.9**:
+Status as of **v0.1.10**:
 
 Stage 1 — Publish
 -----------------
 
-* Read the Docs configuration (``.readthedocs.yaml``) — **live** at `<https://autohs.readthedocs.io/en/latest/>`_
-* Docker Hub image ``autohs/autohs`` via GitHub Actions — **workflow done**; add
-  ``DOCKERHUB_*`` secrets (see :doc:`maintainers`)
+* Read the Docs — **live** at `<https://autohs.readthedocs.io/en/latest/>`_
+* Docker Hub ``autohs/autohs`` — **workflow done**; add ``DOCKERHUB_*`` secrets to publish
 * CI: tests + documentation build on every PR — **done**
+* Root ``LICENSE`` (MIT) — **done**
 
 Stage 2 — BIDS derivatives compliance
 -------------------------------------
@@ -40,15 +40,15 @@ Stage 5 — Ecosystem
 * ``CITATION.cff`` and ``CHANGELOG.md`` — **done**
 * Apptainer ``.sif`` on GitHub Releases — **done**
 * IDEAS sample dataset + citations — **done**
-* BIDS website PR — **submitted, checks passing** (see :doc:`bids_apps_hub`)
-* Zenodo DOI — **pending** first GitHub release with Zenodo integration
+* BIDS website listing — **deferred** (see :doc:`bids_apps_hub`)
+* Zenodo — **GitHub integration enabled**; add concept DOI to ``CITATION.cff`` after first archived release
 
 Documentation depth (QSIPrep parity)
 ------------------------------------
 
-* Installation, usage, outputs, preprocessing — **done**
+* Theory, installation, usage, outputs, preprocessing — **done**
 * Sample data, citation, methods boilerplate — **done**
-* FAQ and troubleshooting — **done**
-* Live Read the Docs site — **done** (`autohs.readthedocs.io`)
+* FAQ, troubleshooting, contributing — **done**
+* README focused on BIDS App; run examples centralized in quickstart — **done**
 
-Run ``./scripts/setup_ecosystem.sh`` for the remaining one-time maintainer steps.
+Run ``./scripts/setup_ecosystem.sh`` for remaining one-time maintainer steps (Docker Hub secrets, Zenodo DOI).

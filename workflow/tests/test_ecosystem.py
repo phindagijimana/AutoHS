@@ -30,6 +30,12 @@ class EcosystemMetadataTests(unittest.TestCase):
         self.assertIn("phindagijimana/AutoHS", content)
         self.assertIn("autohs/autohs", content)
 
+    def test_license(self) -> None:
+        path = REPO_ROOT / "LICENSE"
+        self.assertTrue(path.exists(), "MIT LICENSE is required at repository root")
+        content = path.read_text(encoding="utf-8")
+        self.assertIn("MIT License", content)
+
 
 if __name__ == "__main__":
     unittest.main()

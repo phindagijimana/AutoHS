@@ -5,6 +5,21 @@ All notable changes to AutoHS are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.10] - 2026-08-17
+
+### Added
+
+- MIT ``LICENSE`` at repository root
+- Documentation ``theory`` page (clinical background, AI formula, HS thresholds)
+- ``contributing`` documentation page
+
+### Changed
+
+- README focused on BIDS App; science content moved to Read the Docs
+- Deduplicated install/quickstart/maintainer documentation
+- Simplified ``changes.rst`` (canonical history in ``CHANGELOG.md``)
+- BIDS website listing deferred; roadmap and ecosystem scripts updated
+
 ## [0.1.9] - 2026-08-16
 
 ### Changed

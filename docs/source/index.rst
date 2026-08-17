@@ -59,6 +59,7 @@ web application that implements the AutoHS pipeline (dashboard, API, deployment)
    methods
    faq
    troubleshooting
+   contributing
    citation
    changes
    roadmap

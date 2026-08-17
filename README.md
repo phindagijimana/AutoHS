@@ -3,230 +3,62 @@
 [![CI](https://github.com/phindagijimana/AutoHS/actions/workflows/ci.yml/badge.svg)](https://github.com/phindagijimana/AutoHS/actions/workflows/ci.yml)
 [![Documentation](https://readthedocs.org/projects/autohs/badge/?version=latest)](https://autohs.readthedocs.io/en/latest/?badge=latest)
 
-**Automated Hippocampal Sclerosis Workflow** — a BIDS App and runnable pipeline for T1-weighted MRI: hippocampal segmentation, volumetric extraction, asymmetry indexing, and clinical review.
+**Automated hippocampal sclerosis (HS) screening** from T1-weighted MRI — a [BIDS App](https://bids.neuroimaging.io/bids_apps.html) for epilepsy surgical workup and research.
 
 📖 **Documentation:** [autohs.readthedocs.io](https://autohs.readthedocs.io)
 
-🐳 **Docker:** `docker pull autohs/autohs:latest` (after release; see [Maintainers](docs/source/maintainers.rst))
+AutoHS segments T1w scans (FreeSurfer or FastSurfer), extracts hippocampal volumes, computes the asymmetry index, applies published HS thresholds, and publishes BIDS derivatives with clinical reports. See the [theory page](https://autohs.readthedocs.io/en/latest/theory.html) for the scientific background.
 
-AutoHS is a **runnable two-step workflow** for hippocampal asymmetry analysis. It queues jobs and runs them when Docker and system resources are available.
-
-## Runnable workflow (2 steps)
-
-| Step | Name | Container | What it does |
-|------|------|-----------|--------------|
-| **1** | FreeSurfer processing | `freesurfer/freesurfer:7.4.1` | `recon-all` + `mri_segstats` → `aseg.stats` |
-| **2** | AI-compute | `autohs/ai-compute:latest` | Extract volumes, asymmetry index, overlays, PDF report |
-
-## BIDS App
-
-AutoHS follows the [BIDS Apps](https://bids.neuroimaging.io/bids_apps.html) specification.
+## Quick start (BIDS App)
 
 ```bash
-# Install BIDS dependencies
+git clone https://github.com/phindagijimana/AutoHS.git
+cd AutoHS
 pip install -r requirements-bids.txt
 
-# Run on a BIDS dataset (Apptainer/HPC example)
-python run.py /path/to/bids /path/to/output participant \
-  --participant-label 001 \
-  --fastsurfer \
-  --runtime apptainer
-
-# Docker
-docker build -f docker/Dockerfile.bidsapp -t autohs/autohs:latest .
-docker run --rm -v /data/bids:/data:ro -v /data/out:/out autohs/autohs:latest \
-  /data /out participant --participant-label 001 --fastsurfer
-```
-
-Outputs: `output/autohs/sub-*/` with `report.json`, `report.pdf`, `summary.txt`.
-
-### IDEAS sample dataset
-
-Two public IDEAS subjects (OpenNeuro [ds005602](https://openneuro.org/datasets/ds005602)) are
-provided for tutorials. See [IDEAS data](https://sites.google.com/view/cnnp-lab/ideas-data).
-
-```bash
+# IDEAS sample (two public subjects)
 ./scripts/download_ideas_sample.sh
 python run.py sample_data/ideas_bids bids_output participant \
   --participant-label 1 2 --fastsurfer --runtime apptainer -w bids_output/work
 ```
 
-Cite IDEAS, FreeSurfer/FastSurfer, and AutoHS — see [citation docs](docs/source/citation.rst).
+Results appear under `bids_output/autohs/sub-*/`. Full install options (Docker, Apptainer, HPC): [installation](https://autohs.readthedocs.io/en/latest/installation.html).
 
-Full documentation: [docs/source/index.rst](docs/source/index.rst) (Sphinx / Read the Docs layout, QSIPrep-style).
-
-See also the `./AutoHS` CLI for single-file job queue workflows.
-
-## What this repo contains
-
-```
-AutoHS/
-├── AutoHS                  # CLI: install, build, submit, run, queue, logs
-├── ai_compute/             # Step 2 container code (post-processing + reporting)
-├── docker/
-│   └── Dockerfile.ai-compute
-├── docker-compose.yml
-├── workflow/
-│   ├── pipeline.yaml       # 2-step pipeline definition
-│   ├── runner.py           # Orchestrates FreeSurfer → AI-compute
-│   ├── queue.py            # SQLite job queue
-│   └── steps/
-│       ├── 01-freesurfer-processing.yaml
-│       └── 02-ai-compute.yaml
-└── data/jobs/              # Job workspaces (created at runtime)
-```
-
-Jobs stay **pending** until `./AutoHS run` and resources are ready (Docker, disk, RAM, images, queue slot).
-
-## CLI
+## Run on your data
 
 ```bash
-chmod +x ./AutoHS
-
-./AutoHS install              # Python deps + validate pipeline
-./AutoHS build                # Build ai-compute container
-./AutoHS submit scan_T1w.nii.gz
-./AutoHS run                  # Run pending job if resources available
-./AutoHS queue                # List jobs + resource status
-./AutoHS logs
-./AutoHS status
+python run.py /path/to/bids /path/to/output participant \
+  --participant-label 001 \
+  --fastsurfer \
+  --runtime apptainer
 ```
 
-| Command | Description |
-|---------|-------------|
-| `install` | Create `venv/`, install dependencies, validate pipeline |
-| `build` | Build `autohs/ai-compute:latest` from `docker/Dockerfile.ai-compute` |
-| `submit` | Queue a T1 NIfTI scan for processing |
-| `run` | Execute step 1 then step 2 for oldest pending job when resources allow |
-| `queue` | Show job queue and resource readiness |
-| `start` | Validate pipeline + run unit tests |
-| `logs` | Tail `logs/autohs.log` |
+On Apptainer/HPC, set `FREESURFER_SIF` and/or `FASTSURFER_SIF` before running. See [usage](https://autohs.readthedocs.io/en/latest/usage.html) for all CLI options.
 
-### Prerequisites
+## Containers
 
-- Docker (with `freesurfer/freesurfer:7.4.1` pulled)
-- FreeSurfer `license.txt` in repo root (see `license.txt.example`)
-- T1 NIfTI input (`.nii` or `.nii.gz`)
+| Artifact | Where |
+|----------|-------|
+| Docker | `autohs/autohs:latest` (after maintainers publish; build locally with `docker/Dockerfile.bidsapp`) |
+| Apptainer | `autohs_<version>.sif` on [GitHub Releases](https://github.com/phindagijimana/AutoHS/releases) |
 
-```bash
-cp license.txt.example license.txt   # then paste your FreeSurfer license
-./AutoHS install && ./AutoHS build
-./AutoHS submit path/to/T1w.nii.gz
-./AutoHS run
-```
-
-Outputs per job: `data/jobs/{job_id}/output/report.json`, `report.pdf`, `summary.txt`
-
-## Hippocampal asymmetry index
-
-AutoHS implements the MRI-derived hippocampal asymmetry index used to identify hippocampal sclerosis in epilepsy surgical specimens (see [Citation](#citation) below).
-
-FreeSurfer subcortical segmentation yields left and right hippocampal volumes (**L**, **R**) in mm³. The asymmetry index (**AI**) is:
-
-```
-AI = (L − R) / (L + R)
-```
-
-| Symbol | Meaning |
-|--------|---------|
-| **L** | Left hippocampal volume (mm³) |
-| **R** | Right hippocampal volume (mm³) |
-| **AI** | Asymmetry index (dimensionless; typically −1 to +1) |
-
-**Volume laterality** (threshold ±0.05):
-
-| Condition | Interpretation |
-|-----------|----------------|
-| **AI > 0.05** | Left hippocampus larger than right |
-| **AI < −0.05** | Right hippocampus larger than left |
-| **−0.05 ≤ AI ≤ 0.05** | Symmetric volumes |
-
-**Hippocampal sclerosis (HS) classification** (publication thresholds):
-
-| Condition | Interpretation |
-|-----------|----------------|
-| **AI > 0.046915816971433** | Left-dominant (Right HS suspected) |
-| **AI < −0.070839747728063** | Right-dominant (Left HS suspected) |
-| Otherwise | Balanced (No HS) |
-
-These rules are applied in **AI-compute (step 2)** and written to `report.json`, `summary.txt`, and `report.pdf`.
+The BIDS App image **orchestrates** segmentation (FreeSurfer/FastSurfer) and AI-compute; it does not bundle those tools in a single monolithic image. See [installation](https://autohs.readthedocs.io/en/latest/installation.html#architecture).
 
 ## Citation
 
-If you use AutoHS or the asymmetry index in research, please cite:
+If you use AutoHS, cite the Brain Communications asymmetry paper and this software. BibTeX and dataset references: [`CITATION.cff`](CITATION.cff) and [citation docs](https://autohs.readthedocs.io/en/latest/citation.html).
 
-> **Ndagijimana P**, **Brennan D**, **Shinohara R**, **Gugger J**. MRI derived hippocampal asymmetry identifies hippocampal sclerosis in epilepsy surgical specimens. *Brain Communications*. **Accepted (in press)**.
+## Legacy job-queue CLI
 
-See [`CITATION.cff`](CITATION.cff) for machine-readable metadata. Release notes: [`CHANGELOG.md`](CHANGELOG.md).
-
-**BibTeX:**
-
-```bibtex
-@article{ndagijimana2026mri,
-  title   = {MRI derived hippocampal asymmetry identifies hippocampal sclerosis in epilepsy surgical specimens},
-  author  = {Ndagijimana, Philbert and Brennan, Daniel and Shinohara, Russell and Gugger, James},
-  journal = {Brain Communications},
-  year    = {2026},
-  note    = {Accepted (in press)}
-}
-```
-
-**AutoHS software reference:**
-
-```bibtex
-@software{autohs2026,
-  title  = {AutoHS: Automated Hippocampal Sclerosis Workflow},
-  author = {Ndagijimana, Philbert},
-  year   = {2026},
-  url    = {https://github.com/phindagijimana/AutoHS}
-}
-```
-
-## Quick start
-
-```bash
-git clone https://github.com/phindagijimana/AutoHS.git
-cd AutoHS
-
-chmod +x ./AutoHS
-./AutoHS install
-./AutoHS start
-./AutoHS logs
-```
-
-Or manually:
-
-```bash
-pip install -r workflow/requirements.txt
-python -m workflow.validate
-python -m unittest workflow.tests.test_workflow -v
-```
-
-## Documentation
-
-- **[autohs.readthedocs.io](https://autohs.readthedocs.io)** — AutoHS BIDS App documentation
-- **[workflow/README.md](workflow/README.md)** — pipeline reference, progress ranges, FreeSurfer sub-steps
-- **[workflow/pipeline.yaml](workflow/pipeline.yaml)** — master definition with execution order and job state machine
-- **[workflow/diagrams/](workflow/diagrams/)** — Mermaid flowcharts
+The `./AutoHS` bash CLI (submit/run/queue for single NIfTI files) is documented in [workflow/README.md](workflow/README.md). The **recommended** entry point for BIDS datasets is `run.py`.
 
 ## Related software
 
-| Project | Repository | Role |
-|---------|------------|------|
-| **AutoHS** (this repo) | [AutoHS](https://github.com/phindagijimana/AutoHS) | Pipeline spec, CLI, BIDS App, Docker runner |
-| **NeuroInsight-AutoHS** | [neuroinsight_local](https://github.com/phindagijimana/neuroinsight_local) | Full web application that implements the AutoHS pipeline |
-
-## Requirements
-
-- Python 3.9+
-- Docker
-- FreeSurfer license (`license.txt`)
-- PyYAML, psutil (`workflow/requirements.txt`)
-
-No Redis or PostgreSQL required — jobs are tracked in SQLite at `data/autohs.db`.
+| Project | Role |
+|---------|------|
+| **AutoHS** (this repo) | BIDS App, pipeline, containers |
+| **[NeuroInsight-AutoHS](https://github.com/phindagijimana/neuroinsight_local)** | Web dashboard and deployment |
 
 ## License
 
-Workflow definitions: MIT. See project licensing and FreeSurfer terms for processing components.
-
-© 2025 University of Rochester. All rights reserved.
+MIT — see [`LICENSE`](LICENSE). FreeSurfer and FastSurfer have separate license terms when used as segmentation backends.

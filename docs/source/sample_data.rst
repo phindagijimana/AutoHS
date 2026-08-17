@@ -33,13 +33,7 @@ Data are pulled from `OpenNeuro ds005602 <https://openneuro.org/datasets/ds00560
 Example run
 -----------
 
-.. code-block:: bash
-
-   python run.py sample_data/ideas_bids bids_output participant \
-     --participant-label 1 2 \
-     --fastsurfer \
-     --runtime apptainer \
-     -w bids_output/work
+See :doc:`quickstart` for a full IDEAS example command.
 
 Citations
 ---------

@@ -2,12 +2,21 @@ Installation
 ============
 
 AutoHS can be installed as a BIDS App using Docker, Apptainer/Singularity, or directly
-from source on HPC systems.
+from source on HPC systems. For a first run after install, see :doc:`quickstart`.
+
+Architecture
+------------
+
+The published BIDS App image (``autohs/autohs``) is an **orchestrator**: it discovers BIDS
+T1w scans, invokes **segmentation** (FreeSurfer or FastSurfer in a separate container or
+SIF), then runs **AI-compute** (hippocampal volumes, asymmetry index, reports). Segmentation
+backends are **not** embedded in the orchestrator image — you provide Docker images or
+Apptainer SIF paths at runtime (see below).
 
 Docker Container
 ----------------
 
-Pull the published BIDS App image (after maintainers configure Docker Hub):
+Pull the published image (after maintainers configure Docker Hub):
 
 .. code-block:: bash
 
@@ -19,31 +28,19 @@ Or build locally:
 
    docker build -f docker/Dockerfile.bidsapp -t autohs/autohs:latest .
 
-Run:
-
-.. code-block:: bash
-
-   docker run --rm \
-     -v /path/to/bids:/data:ro \
-     -v /path/to/output:/out \
-     -v /path/to/license.txt:/license.txt:ro \
-     autohs/autohs:latest \
-     /data /out participant \
-     --participant-label 001 \
-     --fs-license-file /license.txt
-
-Documentation is hosted on Read the Docs:
-
-`<https://autohs.readthedocs.io/en/latest/>`_
+Run examples: :doc:`quickstart`.
 
 Apptainer / Singularity Container
 ---------------------------------
 
-On shared HPC clusters without Docker, build a ``.sif`` from the Docker image:
+Download a release artifact or build from Docker:
 
 .. code-block:: bash
 
    apptainer build autohs.sif docker://autohs/autohs:latest
+
+Or download ``autohs_<version>.sif`` from
+`GitHub Releases <https://github.com/phindagijimana/AutoHS/releases>`_.
 
 Set segmentation SIF paths when running outside the bundled Docker stack:
 
@@ -90,3 +87,5 @@ FreeSurfer license
 
 Place ``license.txt`` in the repo root or pass ``--fs-license-file``. FreeSurfer is
 **not** required when using ``--fastsurfer``.
+
+Documentation is hosted at `<https://autohs.readthedocs.io/en/latest/>`_.
