@@ -59,6 +59,13 @@ The `./AutoHS` bash CLI (submit/run/queue for single NIfTI files) is documented 
 | **AutoHS** (this repo) | BIDS App, pipeline, containers |
 | **[NeuroInsight-AutoHS](https://github.com/phindagijimana/neuroinsight_local)** | Web dashboard and deployment |
 
+## Contact
+
+- **Issues / bugs:** [GitHub issues](https://github.com/phindagijimana/AutoHS/issues)
+- **Email:** phindagiji@gmail.com
+
 ## License
 
 MIT — see [`LICENSE`](LICENSE). FreeSurfer and FastSurfer have separate license terms when used as segmentation backends.
+
+Copyright © 2026 Inzira Labs and contributors. All rights reserved.

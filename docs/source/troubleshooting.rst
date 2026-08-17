@@ -91,3 +91,4 @@ Getting help
 
 * Open an issue: https://github.com/phindagijimana/AutoHS/issues
 * Include: AutoHS version (``python run.py --version``), command line, and the last 50 lines of logs
+* Other inquiries: :doc:`contact`

@@ -8,12 +8,17 @@ type: software
 authors:
   - given-names: Philbert
     family-names: Ndagijimana
+    email: phindagiji@gmail.com
   - given-names: Daniel
     family-names: Brennan
   - given-names: Russell
     family-names: Shinohara
   - given-names: James
     family-names: Gugger
+contact:
+  - given-names: Philbert
+    family-names: Ndagijimana
+    email: phindagiji@gmail.com
 identifiers:
   - type: url
     value: https://github.com/phindagijimana/AutoHS

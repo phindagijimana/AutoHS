@@ -54,4 +54,7 @@ Pull requests
 3. If you change docs, run ``sphinx-build -W``.
 4. Describe what changed and how you tested it.
 
-Maintainers: see :doc:`maintainers` for release and ecosystem steps.
+Maintainers: see :doc:`maintainers` for release and ecosystem steps. For questions that are
+not a bug report, see :doc:`contact`.
+
+Questions? See :doc:`contact`.

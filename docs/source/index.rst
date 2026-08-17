@@ -39,6 +39,11 @@ Researchers writing a paper:
 * :doc:`methods` — generate methods-section boilerplate (``python run.py --md-only-boilerplate``)
 * :doc:`citation` — required references for AutoHS, IDEAS sample data, and third-party tools
 
+Need help?
+
+* :doc:`troubleshooting` — common errors and fixes
+* :doc:`contact` — GitHub issues and maintainer email
+
 Related software
 ----------------
 
@@ -60,6 +65,7 @@ web application that implements the AutoHS pipeline (dashboard, API, deployment)
    faq
    troubleshooting
    contributing
+   contact
    citation
    changes
    roadmap
