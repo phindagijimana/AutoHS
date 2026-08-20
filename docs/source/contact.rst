@@ -30,7 +30,7 @@ For research collaboration, clinical questions, or anything not suitable for a p
 Maintainer
 ----------
 
-Philbert Ndagijimana — Inzira Labs.
+Philbert Ndagijimana — Inzira Labs / University of Rochester.
 
 Citing AutoHS
 -------------

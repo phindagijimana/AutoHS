@@ -1,7 +1,7 @@
 # Snippet for maintainers: open a PR to bids-standard/bids-website
 # data/tools/apps.yml with an entry like the following.
 #
-# See docs/source/bids_apps_hub.rst for the full registration checklist.
+# See docs/source/maintainers.rst for the full registration checklist.
 
 - gh: phindagijimana/AutoHS
   dh: autohs/autohs

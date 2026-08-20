@@ -11,7 +11,7 @@ Release checklist
 5. Confirm GitHub Actions: **CI**, **Documentation**, **Publish Docker Image**, **Release Apptainer Image**.
 6. Confirm Read the Docs build for ``main`` / the tag.
 7. After Zenodo archives the release, add the concept DOI to ``CITATION.cff`` ``identifiers``.
-8. Optional: reopen BIDS website listing PR using ``registry/bids-website-apps.yml`` (see :doc:`bids_apps_hub`).
+8. Optional: reopen the BIDS website listing PR (see `BIDS Apps hub listing`_ below).
 
 Read the Docs
 -------------
@@ -43,10 +43,22 @@ Zenodo
 
 Run ``./scripts/setup_ecosystem.sh`` for a printable checklist.
 
-BIDS Apps hub
--------------
+BIDS Apps hub listing
+---------------------
 
-See :doc:`bids_apps_hub` (listing is optional and currently deferred).
+Listing AutoHS on the `BIDS Apps directory <https://bids.neuroimaging.io/bids_apps.html>`_
+is **optional and currently deferred**. To submit when ready:
+
+1. Fork `bids-standard/bids-website <https://github.com/bids-standard/bids-website>`_.
+2. Add an entry to ``data/tools/apps.yml`` using the template in
+   ``registry/bids-website-apps.yml``.
+3. Open a pull request — draft text is in ``registry/bids-website-pr.md``. Reference the
+   Docker Hub namespace (``autohs/autohs``) and the CI workflow name (``CI`` on ``main``).
+
+Publishing a Docker Hub image first is recommended, since the listing advertises it.
+
+To host the repository under `github.com/bids-apps <https://github.com/bids-apps>`_, email
+``bids.maintenance+apps@gmail.com`` with the repository URL and Docker Hub namespace.
 
 Roadmap
 -------

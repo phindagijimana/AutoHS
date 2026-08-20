@@ -69,7 +69,6 @@ web application that implements the AutoHS pipeline (dashboard, API, deployment)
    citation
    changes
    roadmap
-   bids_apps_hub
    maintainers
    privacy
 

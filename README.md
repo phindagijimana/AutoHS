@@ -68,4 +68,4 @@ The `./AutoHS` bash CLI (submit/run/queue for single NIfTI files) is documented 
 
 MIT — see [`LICENSE`](LICENSE). FreeSurfer and FastSurfer have separate license terms when used as segmentation backends.
 
-Copyright © 2026 Inzira Labs and contributors. All rights reserved.
+Copyright © 2026 Inzira Labs, University of Rochester, and Contributors. All rights reserved.

@@ -40,7 +40,7 @@ Stage 5 — Ecosystem
 * ``CITATION.cff`` and ``CHANGELOG.md`` — **done**
 * Apptainer ``.sif`` on GitHub Releases — **done**
 * IDEAS sample dataset + citations — **done**
-* BIDS website listing — **deferred** (see :doc:`bids_apps_hub`)
+* BIDS website listing — **deferred** (submission steps in :doc:`maintainers`)
 * Zenodo — **GitHub integration enabled**; add concept DOI to ``CITATION.cff`` after first archived release
 
 Documentation depth (QSIPrep parity)
