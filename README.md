@@ -21,6 +21,18 @@ NeuroInsight (platform)
 
 Platform overview: [NeuroInsight landing page](https://phindagijimana.github.io/neuroinsight_landing_web/). App deployment: [docs/USER_GUIDE.md](docs/USER_GUIDE.md) and [neuroinsight_local](https://github.com/phindagijimana/neuroinsight_local).
 
+## NeuroInsight platform
+
+**NeuroInsight** is an umbrella platform for automated neuroimaging **workflows**. **AutoHS** is the first workflow (this repository). The deployable application that runs AutoHS is **[NeuroInsight-AutoHS](https://github.com/phindagijimana/neuroinsight_local)**.
+
+```text
+NeuroInsight (platform)
+  └── AutoHS (this repo — workflow / BIDS App / method)
+        └── NeuroInsight-AutoHS (web & desktop app)
+```
+
+Platform overview: [NeuroInsight landing page](https://phindagijimana.github.io/neuroinsight_landing_web/). App deployment: [docs/USER_GUIDE.md](docs/USER_GUIDE.md) and [neuroinsight_local](https://github.com/phindagijimana/neuroinsight_local).
+
 ## Research Software and Licensing
 
 AutoHS is **publicly available, source-available research software** supporting automated hippocampal analysis from T1-weighted MRI and independent evaluation of the hippocampal asymmetry method described in:
