@@ -1,6 +1,6 @@
 {
   "title": "AutoHS",
-  "description": "BIDS App for automated hippocampal sclerosis screening from T1-weighted MRI.",
+  "description": "BIDS App (incoming) for automated hippocampal sclerosis screening from T1-weighted MRI. Follows BIDS Apps CLI conventions; official directory listing pending.",
   "creators": [
     {
       "name": "Ndagijimana, Philbert",
@@ -8,11 +8,11 @@
       "orcid": ""
     }
   ],
-  "license": "MIT",
+  "license": "other-nc",
   "upload_type": "software",
   "publication_date": "2026-08-16",
   "keywords": [
-    "BIDS App",
+    "BIDS App (incoming)",
     "hippocampal sclerosis",
     "epilepsy",
     "neuroimaging"

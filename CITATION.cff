@@ -25,18 +25,20 @@ identifiers:
 repository-code: https://github.com/phindagijimana/AutoHS
 url: https://autohs.readthedocs.io
 abstract: >-
-  AutoHS is a BIDS App for automated hippocampal sclerosis screening from
-  T1-weighted MRI. It performs hippocampal segmentation (FreeSurfer or
-  FastSurfer), computes hippocampal volumes and the asymmetry index, and
-  generates clinical reports.
+  AutoHS is BIDS App (incoming) research software for automated hippocampal
+  sclerosis screening from T1-weighted MRI. It follows BIDS Apps CLI conventions
+  (official directory listing pending), performs hippocampal segmentation
+  (FreeSurfer or FastSurfer), computes hippocampal volumes and the asymmetry
+  index, and generates clinical reports. Current releases use the PolyForm
+  Noncommercial License; tag publication-v1.0 marks the MIT-licensed snapshot.
 keywords:
-  - BIDS App
+  - BIDS App (incoming)
   - hippocampal sclerosis
   - epilepsy
   - FreeSurfer
   - FastSurfer
   - neuroimaging
-license: MIT
+license: PolyForm-Noncommercial-1.0.0
 version: 0.1.10
 date-released: 2026-08-17
 preferred-citation:

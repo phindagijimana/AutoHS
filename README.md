@@ -19,19 +19,7 @@ NeuroInsight (platform)
         └── NeuroInsight-AutoHS (web & desktop app)
 ```
 
-Platform overview: [NeuroInsight landing page](https://phindagijimana.github.io/neuroinsight_landing_web/). App deployment: [docs/USER_GUIDE.md](docs/USER_GUIDE.md) and [neuroinsight_local](https://github.com/phindagijimana/neuroinsight_local).
-
-## NeuroInsight platform
-
-**NeuroInsight** is an umbrella platform for automated neuroimaging **workflows**. **AutoHS** is the first workflow (this repository). The deployable application that runs AutoHS is **[NeuroInsight-AutoHS](https://github.com/phindagijimana/neuroinsight_local)**.
-
-```text
-NeuroInsight (platform)
-  └── AutoHS (this repo — workflow / BIDS App (incoming) / method)
-        └── NeuroInsight-AutoHS (web & desktop app)
-```
-
-Platform overview: [NeuroInsight landing page](https://phindagijimana.github.io/neuroinsight_landing_web/). App deployment: [docs/USER_GUIDE.md](docs/USER_GUIDE.md) and [neuroinsight_local](https://github.com/phindagijimana/neuroinsight_local).
+Platform overview: [NeuroInsight landing page](https://phindagijimana.github.io/neuroinsight_landing_web/). App deployment: [docs/USER_GUIDE.md](docs/USER_GUIDE.md) and [neuroinsight_local](https://github.com/phindagijimana/neuroinsight_local) (product name **NeuroInsight-AutoHS**).
 
 ## Research Software and Licensing
 
@@ -79,6 +67,8 @@ Beginning with the first commit **after** git tag **`publication-v1.0`**, subseq
 
 The licensing transition does not alter the terms under which earlier versions were validly distributed.
 
+Each repository (**AutoHS** and **neuroinsight_local**) defines its own git tag **`publication-v1.0`**; see that repository’s README for the exact release commit and version.
+
 | Release | License |
 |---------|---------|
 | Tag **`publication-v1.0`** (same commit as **`v1.0.27`**, `0aee2cc`) — publication-associated MIT implementation | MIT License |
@@ -86,7 +76,7 @@ The licensing transition does not alter the terms under which earlier versions w
 
 See [COMMERCIAL.md](COMMERCIAL.md) for commercial licensing inquiries.
 
-## Quick start (BIDS App)
+## Quick start (BIDS App (incoming))
 
 ```bash
 git clone https://github.com/phindagijimana/AutoHS.git
