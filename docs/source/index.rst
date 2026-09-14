@@ -51,8 +51,10 @@ Related software
 **NeuroInsight** is the umbrella platform for neuroimaging workflows. **AutoHS** (this
 documentation) is the hippocampal asymmetry workflow. `NeuroInsight-AutoHS
 <https://github.com/phindagijimana/neuroinsight_local>`_ is the deployable application
-that runs AutoHS (dashboard, API, deployment). Platform overview:
-https://phindagijimana.github.io/neuroinsight_landing_web/
+that runs AutoHS (dashboard, API, deployment). Platform overview and paper-linked software:
+https://phindagijimana.github.io/neuroinsight_landing_web/ (`From the publication
+<https://phindagijimana.github.io/neuroinsight_landing_web/#publication>`_). Full doc index:
+https://github.com/phindagijimana/neuroinsight_landing_web/blob/main/DOCUMENTATION.md
 
 .. toctree::
    :maxdepth: 2

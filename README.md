@@ -19,7 +19,7 @@ NeuroInsight (platform)
         └── NeuroInsight-AutoHS (web & desktop app)
 ```
 
-Platform overview: [NeuroInsight landing page](https://phindagijimana.github.io/neuroinsight_landing_web/). App deployment: [docs/USER_GUIDE.md](docs/USER_GUIDE.md) and [neuroinsight_local](https://github.com/phindagijimana/neuroinsight_local) (product name **NeuroInsight-AutoHS**).
+Platform overview: [NeuroInsight landing](https://phindagijimana.github.io/neuroinsight_landing_web/) · [Software from the paper](https://phindagijimana.github.io/neuroinsight_landing_web/#publication). **Doc map:** [DOCUMENTATION.md](https://github.com/phindagijimana/neuroinsight_landing_web/blob/main/DOCUMENTATION.md). App deployment: [neuroinsight_local USER_GUIDE](https://github.com/phindagijimana/neuroinsight_local/blob/master/docs/USER_GUIDE.md).
 
 ## Research Software and Licensing
 
