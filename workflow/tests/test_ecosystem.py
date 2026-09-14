@@ -32,9 +32,10 @@ class EcosystemMetadataTests(unittest.TestCase):
 
     def test_license(self) -> None:
         path = REPO_ROOT / "LICENSE"
-        self.assertTrue(path.exists(), "MIT LICENSE is required at repository root")
+        self.assertTrue(path.exists(), "LICENSE is required at repository root")
         content = path.read_text(encoding="utf-8")
-        self.assertIn("MIT License", content)
+        self.assertIn("PolyForm Noncommercial License 1.0.0", content)
+        self.assertIn("University of Rochester", content)
 
 
 if __name__ == "__main__":
