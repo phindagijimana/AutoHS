@@ -1,6 +1,6 @@
-# NeuroInsight Docker for Windows
+# NeuroInsight-AutoHS Docker for Windows
 
-Docker deployment of NeuroInsight for Windows 10/11 systems.
+Docker deployment of NeuroInsight-AutoHS for Windows 10/11 systems.
 
 ## System Requirements
 
@@ -25,7 +25,7 @@ Required for MRI processing (free for research):
 2. Complete registration
 3. Save license as `license.txt` in this folder
 
-### 3. Download NeuroInsight
+### 3. Download NeuroInsight-AutoHS
 
 ```powershell
 # Clone repository
@@ -35,7 +35,7 @@ cd neuroinsight_local\neuroinsight_windows
 
 Or download ZIP from GitHub and extract to desired location.
 
-### 4. Install NeuroInsight
+### 4. Install NeuroInsight-AutoHS
 
 Open PowerShell or Command Prompt in the neuroinsight_windows folder:
 
@@ -49,7 +49,7 @@ Open PowerShell or Command Prompt in the neuroinsight_windows folder:
 install.bat
 ```
 
-### 5. Access NeuroInsight
+### 5. Access NeuroInsight-AutoHS
 
 Open browser to: http://localhost:8000
 
@@ -168,7 +168,7 @@ wsl --shutdown
 
 All data stored in Docker volumes persists across:
 - Container restarts
-- NeuroInsight updates
+- NeuroInsight-AutoHS updates
 - System reboots
 
 Includes:
@@ -182,7 +182,7 @@ Includes:
 ## Uninstallation
 
 ```powershell
-# Remove NeuroInsight
+# Remove NeuroInsight-AutoHS
 .\neuroinsight-docker.ps1 remove
 
 # Remove Docker volumes (deletes all data)

@@ -46,7 +46,7 @@ Where possible, researchers are encouraged to report sensitivity, specificity, R
 
 Researchers are encouraged to document:
 
-- AutoHS / NeuroInsight version
+- AutoHS / NeuroInsight-AutoHS version
 - Git commit or release tag
 - segmentation software version
 - relevant container versions
