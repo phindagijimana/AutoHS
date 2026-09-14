@@ -9,6 +9,83 @@
 
 AutoHS segments T1w scans (FreeSurfer or FastSurfer), extracts hippocampal volumes, computes the asymmetry index, applies published HS thresholds, and publishes BIDS derivatives with clinical reports. See the [theory page](https://autohs.readthedocs.io/en/latest/theory.html) for the scientific background.
 
+## NeuroInsight platform
+
+**NeuroInsight** is an umbrella platform for automated neuroimaging **workflows**. **AutoHS** is the first workflow (this repository). The deployable application that runs AutoHS is **[NeuroInsight-AutoHS](https://github.com/phindagijimana/neuroinsight_local)**.
+
+```text
+NeuroInsight (platform)
+  └── AutoHS (this repo — workflow / BIDS App / method)
+        └── NeuroInsight-AutoHS (web & desktop app)
+```
+
+Platform overview: [NeuroInsight landing page](https://phindagijimana.github.io/neuroinsight_landing_web/). App deployment: [docs/USER_GUIDE.md](docs/USER_GUIDE.md) and [neuroinsight_local](https://github.com/phindagijimana/neuroinsight_local).
+
+## NeuroInsight platform
+
+**NeuroInsight** is an umbrella platform for automated neuroimaging **workflows**. **AutoHS** is the first workflow (this repository). The deployable application that runs AutoHS is **[NeuroInsight-AutoHS](https://github.com/phindagijimana/neuroinsight_local)**.
+
+```text
+NeuroInsight (platform)
+  └── AutoHS (this repo — workflow / BIDS App / method)
+        └── NeuroInsight-AutoHS (web & desktop app)
+```
+
+Platform overview: [NeuroInsight landing page](https://phindagijimana.github.io/neuroinsight_landing_web/). App deployment: [docs/USER_GUIDE.md](docs/USER_GUIDE.md) and [neuroinsight_local](https://github.com/phindagijimana/neuroinsight_local).
+
+## Research Software and Licensing
+
+AutoHS is **publicly available, source-available research software** supporting automated hippocampal analysis from T1-weighted MRI and independent evaluation of the hippocampal asymmetry method described in:
+
+Ndagijimana P, Brennan D, Shinohara RT, Gugger JJ.
+*MRI derived hippocampal asymmetry identifies hippocampal sclerosis in epilepsy surgical specimens.*
+Brain Communications. 2026;8(4):fcag320.
+https://doi.org/10.1093/braincomms/fcag320
+
+### Research and validation use
+
+The source code is publicly available to support:
+
+- scientific research
+- reproducibility
+- independent validation
+- education and teaching
+- evaluation on independent datasets
+- development of research extensions, subject to the [LICENSE](LICENSE)
+
+Independent validation by other research groups is encouraged.
+
+See [VALIDATION.md](VALIDATION.md).
+
+### Commercial use
+
+The current release is distributed under a non-commercial, source-available license.
+
+Commercial use requires a separate commercial license.
+
+Organizations interested in commercial deployment, integration, redistribution, products, services, or other commercial applications should see [COMMERCIAL.md](COMMERCIAL.md).
+
+### Clinical status
+
+This software is research software and has not been cleared or approved by the U.S. Food and Drug Administration as a medical device.
+
+Outputs should not be interpreted as a substitute for professional clinical judgment.
+
+### Licensing history
+
+The software implementation associated with the original publication was released under the MIT License and described in the publication as open-source software.
+
+Beginning with the first commit **after** git tag **`publication-v1.0`**, subsequent releases are distributed under the license contained in the current [LICENSE](LICENSE) file.
+
+The licensing transition does not alter the terms under which earlier versions were validly distributed.
+
+| Release | License |
+|---------|---------|
+| Tag **`publication-v1.0`** (same commit as **`v1.0.27`**, `0aee2cc`) — publication-associated MIT implementation | MIT License |
+| Commits after **`publication-v1.0`** on the default branch | PolyForm Noncommercial License 1.0.0 |
+
+See [COMMERCIAL.md](COMMERCIAL.md) for commercial licensing inquiries.
+
 ## Quick start (BIDS App)
 
 ```bash
@@ -54,10 +131,13 @@ The `./AutoHS` bash CLI (submit/run/queue for single NIfTI files) is documented 
 
 ## Related software
 
-| Project | Role |
-|---------|------|
-| **AutoHS** (this repo) | BIDS App, pipeline, containers |
-| **[NeuroInsight-AutoHS](https://github.com/phindagijimana/neuroinsight_local)** | Web dashboard and deployment |
+| Layer | Name | Repository |
+|-------|------|------------|
+| Platform | **NeuroInsight** | [Landing page](https://phindagijimana.github.io/neuroinsight_landing_web/) |
+| Workflow | **AutoHS** (this repo) | [AutoHS](https://github.com/phindagijimana/AutoHS) |
+| Tool | **NeuroInsight-AutoHS** | [neuroinsight_local](https://github.com/phindagijimana/neuroinsight_local) |
+
+App deployment guide: [docs/USER_GUIDE.md](docs/USER_GUIDE.md).
 
 ## Contact
 
@@ -66,6 +146,8 @@ The `./AutoHS` bash CLI (submit/run/queue for single NIfTI files) is documented 
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE). FreeSurfer and FastSurfer have separate license terms when used as segmentation backends.
+Current releases are distributed under the [PolyForm Noncommercial License 1.0.0](LICENSE) unless you obtained an earlier release under MIT (see **Licensing history** above).
 
-Copyright © 2026 Inzira Labs, University of Rochester, and Contributors. All rights reserved.
+FreeSurfer and FastSurfer have separate license terms when used as segmentation backends.
+
+Copyright (c) 2025 University of Rochester. All rights reserved.

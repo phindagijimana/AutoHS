@@ -47,8 +47,11 @@ Need help?
 Related software
 ----------------
 
-`NeuroInsight-AutoHS <https://github.com/phindagijimana/neuroinsight_local>`_ is the full
-web application that implements the AutoHS pipeline (dashboard, API, deployment).
+**NeuroInsight** is the umbrella platform for neuroimaging workflows. **AutoHS** (this
+documentation) is the hippocampal asymmetry workflow. `NeuroInsight-AutoHS
+<https://github.com/phindagijimana/neuroinsight_local>`_ is the deployable application
+that runs AutoHS (dashboard, API, deployment). Platform overview:
+https://phindagijimana.github.io/neuroinsight_landing_web/
 
 .. toctree::
    :maxdepth: 2
