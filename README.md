@@ -3,7 +3,7 @@
 [![CI](https://github.com/phindagijimana/AutoHS/actions/workflows/ci.yml/badge.svg)](https://github.com/phindagijimana/AutoHS/actions/workflows/ci.yml)
 [![Documentation](https://readthedocs.org/projects/autohs/badge/?version=latest)](https://autohs.readthedocs.io/en/latest/?badge=latest)
 
-**Automated hippocampal sclerosis (HS) screening** from T1-weighted MRI — a [BIDS App](https://bids.neuroimaging.io/bids_apps.html) for epilepsy surgical workup and research.
+**Automated hippocampal sclerosis (HS) screening** from T1-weighted MRI — a **BIDS App (incoming)** following [BIDS Apps](https://bids.neuroimaging.io/bids_apps.html) CLI conventions (official directory listing pending) for epilepsy surgical workup and research.
 
 📖 **Documentation:** [autohs.readthedocs.io](https://autohs.readthedocs.io)
 
@@ -15,7 +15,7 @@ AutoHS segments T1w scans (FreeSurfer or FastSurfer), extracts hippocampal volum
 
 ```text
 NeuroInsight (platform)
-  └── AutoHS (this repo — workflow / BIDS App / method)
+  └── AutoHS (this repo — workflow / BIDS App (incoming) / method)
         └── NeuroInsight-AutoHS (web & desktop app)
 ```
 
@@ -27,7 +27,7 @@ Platform overview: [NeuroInsight landing page](https://phindagijimana.github.io/
 
 ```text
 NeuroInsight (platform)
-  └── AutoHS (this repo — workflow / BIDS App / method)
+  └── AutoHS (this repo — workflow / BIDS App (incoming) / method)
         └── NeuroInsight-AutoHS (web & desktop app)
 ```
 

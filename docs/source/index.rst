@@ -5,9 +5,10 @@ AutoHS documentation
    :target: https://autohs.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-**AutoHS** is a `BIDS App <https://bids.neuroimaging.io/bids_apps.html>`_ for automated
-**hippocampal sclerosis (HS) screening** from T1-weighted MRI. It is designed for epilepsy
-surgical workup and research cohorts with BIDS-organized anatomical scans.
+**AutoHS** is **BIDS App (incoming)** — it uses the `BIDS Apps <https://bids.neuroimaging.io/bids_apps.html>`_ CLI
+convention for automated **hippocampal sclerosis (HS) screening** from T1-weighted MRI (official
+directory listing pending). It is designed for epilepsy surgical workup and research cohorts with
+BIDS-organized anatomical scans.
 
 What problem does AutoHS solve?
 -------------------------------

@@ -6,8 +6,10 @@ General
 
 **Is AutoHS a BIDS App?**
 
-Yes. AutoHS follows the `BIDS Apps <https://bids.neuroimaging.io/bids_apps.html>`_ command-line
-convention: ``autohs bids_dir output_dir participant [options]``.
+AutoHS follows the `BIDS Apps <https://bids.neuroimaging.io/bids_apps.html>`_ command-line
+convention: ``autohs bids_dir output_dir participant [options]``. It is **BIDS App (incoming)**:
+the CLI and container layout match BIDS Apps, but AutoHS is **not yet listed** on the official
+BIDS Apps directory (listing in progress).
 
 **Does AutoHS support group-level analysis?**
 
